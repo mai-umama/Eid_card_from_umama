@@ -1,77 +1,164 @@
-<<<<<<< HEAD
-# Welcome to your Lovable project
+Eid Card From Umama
+A personalized, animated Eid card generator that lets you create beautiful, culturally inspired cards for your loved ones. Choose from multiple character and background styles, see a live preview, and download your card instantly — all in one seamless experience.
 
-## Project info
+🔗 Live Demo: eid-card-from-umama.vercel.app
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+📋 Table of Contents
+Overview
 
-## How can I edit this code?
+Features
 
-There are several ways of editing your application.
+Screenshots
 
-**Use Lovable**
+Technologies Used
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+Prerequisites
 
-**Use your preferred IDE**
+Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Running Locally
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Usage
 
-Follow these steps:
+Project Structure
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Contributing
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+License
 
-# Step 3: Install the necessary dependencies.
-npm i
+Acknowledgements
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+📖 Overview
+Eid Card From Umama is a front-end web application built to celebrate Eid by enabling users to craft custom greeting cards. The interface includes a home page, a card customisation panel with live preview, and a cultural story page about the tradition of Eidi. The design is responsive, modern, and aims to capture the festive spirit of Eid.
 
-**Edit a file directly in GitHub**
+✨ Features
+Personalised Cards – Enter your name, the receiver’s name, and select the sender’s gender.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Multiple Visual Styles
 
-**Use GitHub Codespaces**
+Character Style: STANDARD, LANTERN, FESTIVE
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Background Style: Elegant gold lantern, Floral Eid theme, Mosque arch theme
 
-## What technologies are used for this project?
+Live Preview – Updates instantly as you customise, so you see the final result before downloading.
 
-This project is built with:
+Download & Share – Save your card as a high-quality image and share it with friends and family.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Eidi Story Page – A short, illustrated explanation of the tradition of Eidi, adding cultural depth.
 
-## How can I deploy this project?
+Fully Responsive – Optimised for mobile, tablet, and desktop devices.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Clean, Intuitive UI – Designed with a focus on user experience and festive aesthetics.
 
-## Can I connect a custom domain to my Lovable project?
+🛠️ Technologies Used
+HTML5 – Semantic markup
 
-Yes, you can!
+CSS3 – Flexbox, Grid, custom animations
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+JavaScript (ES6) – DOM manipulation, live preview logic, image generation
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-=======
-# Eid_card_from_umama
->>>>>>> e5a7c88858a8d384b1962ba50a0d85839a087b92
+Tailwind CSS – Utility-first styling (assumed based on design)
+
+Vercel – Hosting and deployment
+
+🚀 Getting Started
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+
+Prerequisites
+A modern web browser (Chrome, Firefox, Safari, Edge)
+
+A code editor (e.g., VS Code) if you wish to modify the code
+
+(Optional) Live Server extension for a better local development experience
+
+Installation
+Clone the repository
+
+bash
+git clone https://github.com/yourusername/eid-card-from-umama.git
+Navigate to the project folder
+
+bash
+cd eid-card-from-umama
+Running Locally
+Since this is a static website, you can simply open the index.html file in your browser:
+
+Double-click index.html
+OR
+
+Use a live server (recommended for auto-reload):
+
+bash
+npx live-server
+(if you have live-server installed globally, or use the VS Code Live Server extension)
+
+The application will open at http://localhost:8080 (or another port).
+
+🎯 Usage
+Home Page – Scroll down or click the CELEBRATE button to start creating a card.
+
+Customisation Form – Fill in the fields:
+
+Your Name
+
+Receiver’s Name
+
+Sender Gender (Male/Female)
+
+Choose a Character Style (STANDARD, LANTERN, FESTIVE)
+
+Choose a Background Style (Elegant gold lantern, Floral Eid theme, Mosque arch theme)
+
+Live Preview – Watch the card update in real time as you change any option.
+
+Download – Click the DOWNLOAD CARD button to save your card as an image.
+
+Explore – Visit the Eidi Story page (accessible via the back/home navigation) to learn about the tradition.
+
+📁 Project Structure
+text
+eid-card-from-umama/
+│
+├── index.html              # Home page
+├── create-card.html        # Card customisation page
+├── story.html              # Eidi story page
+├── style.css               # Global styles (if not using Tailwind exclusively)
+├── script.js               # Main JavaScript for interactivity
+├── assets/                 # Images, icons, fonts
+│   ├── images/
+│   └── ...
+├── screenshots/            # Screenshots for README
+└── README.md               # This file
+Note: Adjust the file structure according to your actual project layout.
+
+🤝 Contributing
+Contributions are welcome! If you have ideas for improvement or have found a bug, please open an issue or submit a pull request.
+
+Fork the Project
+
+Create your Feature Branch (git checkout -b feature/AmazingFeature)
+
+Commit your Changes (git commit -m 'Add some AmazingFeature')
+
+Push to the Branch (git push origin feature/AmazingFeature)
+
+Open a Pull Request
+
+Please ensure your code adheres to the existing style and that all tests pass (if applicable).
+
+📄 License
+Distributed under the MIT License. See LICENSE for more information.
+
+🙏 Acknowledgements
+Inspired by the beautiful tradition of Eid and the joy of giving.
+
+Icons and illustrations from Font Awesome and Heroicons (if used).
+
+Special thanks to everyone who celebrates and spreads love during Eid.
+
+Deployed with ❤️ on Vercel.
+
+Made with 💖 by Umama
+Eid Mubarak to you and your family.
