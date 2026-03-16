@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Dark night background -->
+  <rect width="64" height="64" rx="12" fill="#1a0a2e"/>
+  <!-- Crescent moon -->
+  <path d="M38 12a18 18 0 1 0 0 36 14 14 0 1 1 0-36z" fill="#d4af37"/>
+  <!-- Star -->
+  <polygon points="46,14 47.5,18.5 52,18.5 48.5,21.5 49.8,26 46,23.2 42.2,26 43.5,21.5 40,18.5 44.5,18.5" fill="#fef08a"/>
+</svg>

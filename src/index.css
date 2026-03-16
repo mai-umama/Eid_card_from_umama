@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 43 70% 50%;
+    --primary-foreground: 222 47% 4%;
+
+    --secondary: 161 94% 20%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 30% 12%;
+    --muted-foreground: 210 20% 60%;
+
+    --accent: 161 94% 20%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 43 70% 50% / 0.2;
+    --input: 222 30% 15%;
+    --ring: 43 70% 50%;
+
+    --radius: 1rem;
+
+    --gold: 43 70% 50%;
+    --gold-glow: 43 70% 50%;
+    --emerald: 161 94% 20%;
+    --glass: 222 47% 10%;
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 43 70% 50%;
+    --sidebar-primary-foreground: 222 47% 4%;
+    --sidebar-accent: 161 94% 20%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 43 70% 50% / 0.2;
+    --sidebar-ring: 43 70% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+  }
+
+  .glass-panel {
+    background: hsl(var(--glass) / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--gold) / 0.2);
+  }
+
+  .gold-text {
+    color: hsl(var(--gold));
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 60px hsl(var(--gold) / 0.3), 0 0 100px hsl(var(--gold) / 0.15);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Scroll-reveal: fades in and slides up from below */
+@keyframes fade-slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+}
+.reveal.visible {
+  animation: fade-slide-up 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* Double-bounce for scroll indicator arrow */
+@keyframes double-bounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(8px); }
+  50% { transform: translateY(3px); }
+  70% { transform: translateY(10px); }
+}
+
+/* Glass button hover ring pulse */
+@keyframes ring-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(212,175,55,0.6); }
+  70%  { box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+}
+
+/* Slow drift for ambient particles */
+@keyframes slow-drift {
+  0%   { transform: translateY(0) translateX(0); opacity: 0.3; }
+  50%  { transform: translateY(-18px) translateX(6px); opacity: 0.7; }
+  100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+}
