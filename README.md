@@ -1,4 +1,5 @@
 Eid Card From Umama
+
 A personalized, animated Eid card generator that lets you create beautiful, culturally inspired cards for your loved ones. Choose from multiple character and background styles, see a live preview, and download your card instantly — all in one seamless experience.
 
 🔗 Live Demo: eid-card-from-umama.vercel.app
@@ -161,4 +162,5 @@ Special thanks to everyone who celebrates and spreads love during Eid.
 Deployed with ❤️ on Vercel.
 
 Made with 💖 by Umama
+
 Eid Mubarak to you and your family.
