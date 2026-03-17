@@ -12,7 +12,7 @@ const EID_QUOTES = [
 // ── Typing speed (ms per character) — easy to tune ──────────────────────────
 const TYPING_SPEED_MS = 30;
 
-export const VelvetArchSection = () => {
+export const VelvetArchSection = ({ userName }: { userName?: string }) => {
   // Pick one random quote per page load (stable via useRef)
   const quoteRef = useRef(EID_QUOTES[Math.floor(Math.random() * EID_QUOTES.length)]);
 
@@ -61,64 +61,84 @@ export const VelvetArchSection = () => {
   return (
     <section
       id="velvet-arch-section"
-      className="relative w-full min-h-screen flex items-center justify-center py-20 px-4"
+      className="relative w-full min-h-screen flex items-center justify-center py-20 px-4 transition-colors duration-700"
     >
-      <div
-        className="relative w-full max-w-lg shadow-2xl border-4 border-[#d4af37]/30"
-        style={{
-          backgroundImage: "url('/velvet_arch.png')",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: "#4a0404",
-          aspectRatio: "3/4",
-          maxHeight: "90vh",
-          borderRadius: "50% 50% 12px 12px / 12% 12% 4px 4px",
-          scrollMarginTop: "5vh",
-        }}
-      >
-        {/* Text — centered below the Bismillah */}
+      {/* Outer Template Wrapper */}
+      <div className="relative w-full max-w-[500px] p-6 sm:p-10 md:p-12 flex items-center justify-center rounded-lg shadow-inner overflow-visible transition-colors duration-700">
+        
+        {/* Geometric Pattern Background (behind the card) */}
+        <div 
+          className="absolute inset-0 rounded-lg dark:opacity-20 opacity-[0.08] pointer-events-none transition-opacity duration-700"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='%23bf953f' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+            backgroundSize: '30px 30px'
+          }}
+        />
+
+        {/* Thick Gold Frame (Template Style) */}
+        <div className="absolute inset-1 sm:inset-2 border-4 border-[#bf953f] pointer-events-none rounded-lg z-20 shadow-[0_0_25px_rgba(191,149,63,0.3)] dark:shadow-[0_0_40px_rgba(191,149,63,0.2)]">
+          <div className="absolute inset-1 border border-[#fcf6ba]/40 rounded-sm" />
+          
+          {/* Decorative Corner Ornaments */}
+          <div className="absolute top-[-10px] left-[-10px] w-8 h-8 bg-[#bf953f] rotate-45 border border-[#fcf6ba]/50 shadow-lg" />
+          <div className="absolute top-[-10px] right-[-10px] w-8 h-8 bg-[#bf953f] rotate-45 border border-[#fcf6ba]/50 shadow-lg" />
+          <div className="absolute bottom-[-10px] left-[-10px] w-8 h-8 bg-[#bf953f] rotate-45 border border-[#fcf6ba]/50 shadow-lg" />
+          <div className="absolute bottom-[-10px] right-[-10px] w-8 h-8 bg-[#bf953f] rotate-45 border border-[#fcf6ba]/50 shadow-lg" />
+        </div>
+
+        {/* The Card Itself */}
         <div
-          ref={sectionRef}
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-10 pt-[22%] pb-[8%]"
+          className="relative w-full shadow-[0_20px_50px_rgba(0,0,0,0.6)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden rounded-sm ring-1 ring-[#bf953f]/20 z-10"
+          style={{
+            backgroundImage: "url('/velvet_arch.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            aspectRatio: "2/3",
+            maxHeight: "85vh",
+          }}
         >
-          <div className="max-w-lg mx-auto space-y-6">
+          {/* Text Container — centered below the Bismillah */}
+          <div
+            ref={sectionRef}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 sm:px-12 pt-[22%] pb-[8%]"
+          >
+            <div className="w-full space-y-6">
+              {/* Shiny "Eid Mubarak" title */}
+              <h2
+                className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-[linear-gradient(110deg,#bf953f,30%,#fcf6ba,50%,#bf953f,70%,#fde047)] bg-[length:200%_100%] leading-tight drop-shadow-md"
+                style={{
+                  animation: "shimmer 2s linear infinite",
+                  WebkitTextStroke: "0.5px rgba(212,175,55,0.3)",
+                }}
+              >
+                {userName ? `Eid Mubarak, ${userName}` : "Eid Mubarak"}
+              </h2>
 
-            {/* Shiny "Eid Mubarak" title */}
-            <h2
-              className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-[linear-gradient(110deg,#bf953f,30%,#fcf6ba,50%,#bf953f,70%,#fde047)] bg-[length:200%_100%] leading-tight drop-shadow-md"
-              style={{
-                animation: "shimmer 2s linear infinite",
-                WebkitTextStroke: "0.5px rgba(212,175,55,0.3)",
-              }}
-            >
-              Eid Mubarak
-            </h2>
+              {/* Static wish */}
+              <p
+                className="font-serif text-sm sm:text-lg text-[#fefce8] leading-relaxed drop-shadow-sm font-medium"
+                style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
+              >
+                May this beautiful day bring peace, happiness, and infinite blessings to you and your family.
+              </p>
 
-            {/* Static wish */}
-            <p
-              className="font-serif text-base sm:text-lg text-[#fefce8] leading-relaxed drop-shadow-sm font-medium"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
-            >
-              May this beautiful day bring peace, happiness, and infinite blessings to you and your family.
-            </p>
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#fde047] to-transparent mx-auto opacity-70" />
 
-            <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#fde047] to-transparent mx-auto opacity-70" />
-
-            {/* Typing quote with blinking cursor */}
-            <p
-              className="font-body text-sm sm:text-base text-[#fef08a] italic leading-relaxed max-w-xs mx-auto drop-shadow-sm font-light min-h-[5rem]"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
-            >
-              {visibleQuote}
-              {showCursor && (
-                <span
-                  className="inline-block w-[2px] h-[1em] bg-[#fde047] ml-[1px] align-middle"
-                  style={{ animation: "cursor-blink 0.7s step-end infinite" }}
-                />
-              )}
-            </p>
-
+              {/* Typing quote with blinking cursor */}
+              <p
+                className="font-body text-xs sm:text-base text-[#fef08a] italic leading-relaxed max-w-[280px] mx-auto drop-shadow-sm font-light min-h-[4.5rem]"
+                style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
+              >
+                {visibleQuote}
+                {showCursor && (
+                  <span
+                    className="inline-block w-[2px] h-[1em] bg-[#fde047] ml-[1px] align-middle"
+                    style={{ animation: "cursor-blink 0.7s step-end infinite" }}
+                  />
+                )}
+              </p>
+            </div>
           </div>
         </div>
       </div>

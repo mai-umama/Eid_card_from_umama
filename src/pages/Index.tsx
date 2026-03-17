@@ -26,7 +26,27 @@ const Index = () => {
   const [displayName, setDisplayName] = useState("");
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Check localStorage or default to true
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("theme");
+      return saved ? saved === "dark" : true;
+    }
+    return true;
+  });
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Apply theme class
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
   // Scroll-reveal refs
   const titleReveal    = useScrollReveal(0.1);
@@ -89,6 +109,10 @@ const Index = () => {
     }, duration);
   }, [name, isPlaying]);
 
+  const scrollToNext = () => {
+    document.getElementById('velvet-arch-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center relative bg-background overflow-x-hidden">
       <audio ref={audioRef} src="/eid_mubarak.mp3" loop className="hidden" />
@@ -147,7 +171,7 @@ const Index = () => {
                 localStorage.setItem("eid-user-name", e.target.value);
               }}
               onKeyDown={(e) => e.key === "Enter" && celebrate()}
-              className="w-full bg-black/40 border-2 border-[#d4af37]/80 rounded-full px-6 py-3.5 text-white font-body text-base outline-none focus:border-[#d4af37] focus:bg-black/60 transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.15)] placeholder:text-white/60 focus:shadow-[0_0_25px_rgba(212,175,55,0.35)]"
+              className="w-full bg-slate-100/40 dark:bg-black/40 border-2 border-[#d4af37]/80 rounded-full px-6 py-3.5 dark:text-white text-slate-800 font-body text-base outline-none focus:border-[#d4af37] focus:bg-white/60 dark:focus:bg-black/60 transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.15)] placeholder:text-slate-600 dark:placeholder:text-white/60 focus:shadow-[0_0_25px_rgba(212,175,55,0.35)] backdrop-blur-sm"
             />
           </div>
           <button
@@ -160,27 +184,21 @@ const Index = () => {
           </button>
         </div>
 
-        {/* Scroll indicator — double-bounce */}
-        <div className="w-full flex justify-center mt-5 z-10 pointer-events-none">
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold bg-black/50 border border-[#d4af37]/40 px-5 py-1.5 rounded-full backdrop-blur-md text-[#fef08a]">
-              Scroll down
-            </span>
-            <svg
-              width="22" height="22" viewBox="0 0 24 24"
-              fill="none" stroke="#d4af37" strokeWidth="2.5"
-              strokeLinecap="round" strokeLinejoin="round"
-              className="mt-1 drop-shadow-[0_0_8px_rgba(212,175,55,0.9)]"
-              style={{ animation: "double-bounce 1.6s ease-in-out infinite" }}
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </div>
-        </div>
+        {/* Premium CTA Button */}
+        {displayName && (
+          <button
+            onClick={scrollToNext}
+            className="mt-10 px-10 py-4 rounded-full font-display text-sm sm:text-base tracking-[0.2em] uppercase transition-all duration-500 hover:scale-105 hover:-translate-y-2 active:scale-95 bg-[linear-gradient(135deg,#bf953f_0%,#fcf6ba_50%,#bf953f_100%)] text-black font-bold shadow-[0_0_25px_rgba(191,149,63,0.5)] hover:shadow-[0_0_50px_rgba(191,149,63,0.9)] flex items-center gap-3 group relative overflow-hidden z-20"
+            style={{ animation: "float 4s ease-in-out infinite" }}
+          >
+            <span className="relative z-10 drop-shadow-sm">Reveal your Eid wish ✨</span>
+            <div className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-12" />
+          </button>
+        )}
       </main>
 
       {/* Second Section: Velvet Arch */}
-      {name.trim() && <VelvetArchSection />}
+      {name.trim() && <VelvetArchSection userName={displayName} />}
 
       {/* ── Floating Buttons ───────────────────────────────────────────────── */}
       <div className="fixed bottom-6 right-4 sm:right-6 flex flex-col items-end gap-3 z-50">
@@ -226,6 +244,28 @@ const Index = () => {
           <BookOpen className="w-4 h-4" />
           <span className="hidden sm:inline tracking-wide">Eid Story</span>
         </Link>
+      </div>
+
+      {/* Theme Toggle Button */}
+      <div className="fixed top-6 right-4 sm:right-6 z-50">
+        <button
+          onClick={toggleTheme}
+          className="p-3 rounded-full transition-all duration-500 hover:scale-110 active:scale-95 shadow-lg group relative overflow-hidden"
+          style={{
+            background: isDarkMode ? "rgba(212,175,55,0.1)" : "rgba(255,255,255,0.8)",
+            backdropFilter: "blur(10px)",
+            border: `1.5px solid ${isDarkMode ? "rgba(212,175,55,0.3)" : "rgba(191,149,63,0.3)"}`,
+            color: isDarkMode ? "#fde047" : "#bf953f",
+          }}
+          aria-label="Toggle Theme"
+        >
+          {isDarkMode ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+          )}
+          <div className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300" />
+        </button>
       </div>
     </div>
   );
