@@ -11,18 +11,25 @@ import { generateCardCanvas } from "@/lib/generateCardCanvas";
 type Step = "landing" | "identity" | "template" | "preview";
 
 const ShimmerTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <h2 className={`font-display font-bold bg-clip-text text-transparent bg-[linear-gradient(110deg,#d4af37,45%,#fff8b0,55%,#d4af37)] bg-[length:200%_100%] animate-[shimmer_2s_infinite] drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)] ${className}`}>
+  <h2 className={`font-display font-bold bg-clip-text text-transparent bg-[linear-gradient(110deg,#d4af37,45%,#fff8b0,55%,#d4af37)] bg-[length:200%_100%] animate-[shimmer_2s_infinite] drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)] [text-shadow:0_1px_2px_rgba(0,0,0,0.1)] ${className}`}>
     {children}
   </h2>
 );
 
 const GlassContainer = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <div className={`glass-panel rounded-[40px] shadow-2xl p-8 sm:p-12 border border-white/20 backdrop-blur-2xl ${className}`}>
+  <div className={`glass-panel rounded-[40px] shadow-2xl p-8 sm:p-12 border border-slate-200/50 dark:border-white/20 backdrop-blur-2xl ${className}`}>
     {children}
   </div>
 );
 
 const CustomEidCard = () => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("theme");
+      return saved ? saved === "dark" : true;
+    }
+    return true;
+  });
   const [step, setStep] = useState<Step>("landing");
   const [yourName, setYourName] = useState(() => localStorage.getItem("eid-user-name") || "");
   const [fromName, setFromName] = useState("");
@@ -30,6 +37,18 @@ const CustomEidCard = () => {
   const [gender, setGender] = useState<"Male" | "Female" | "Other">("Male");
   const [templateId, setTemplateId] = useState<"royal-teal" | "majestic-midnight" | "eternal-ivory">("royal-teal");
   const [isExporting, setIsExporting] = useState(false);
+
+  // Apply theme class
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
   // Auto-scrolling to top on step change
   useEffect(() => {
@@ -133,19 +152,32 @@ const CustomEidCard = () => {
       <header className="w-full max-w-5xl px-6 py-8 flex items-center justify-between z-20 relative">
         <Link 
           to="/" 
-          className="group flex items-center gap-2 text-white/70 hover:text-white transition-all"
+          className="group flex items-center gap-2 text-slate-500 dark:text-white/70 hover:text-slate-900 dark:hover:text-white transition-all"
         >
-          <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md shadow-sm flex items-center justify-center border border-white/20 group-hover:bg-white/20 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
+          <div className="w-10 h-10 rounded-full bg-white/10 dark:bg-white/10 backdrop-blur-md shadow-sm flex items-center justify-center border border-slate-200 dark:border-white/20 group-hover:bg-white/20 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
             <ArrowLeft className="w-5 h-5" />
           </div>
           <span className="font-semibold text-sm">Main Site</span>
         </Link>
         
-        <h1 className="font-display text-xs sm:text-sm text-white/50 tracking-[0.4em] font-bold uppercase">
+        <h1 className="font-display text-xs sm:text-sm text-slate-400 dark:text-white/50 tracking-[0.4em] font-bold uppercase">
           CARD CREATOR VIBE
         </h1>
 
-        <div className="w-10 h-10" />
+        <button
+          onClick={toggleTheme}
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 shadow-sm border border-slate-200 dark:border-white/20 bg-white/10 dark:bg-white/10 backdrop-blur-md"
+          style={{
+            color: isDarkMode ? "#fde047" : "#bf953f",
+          }}
+          aria-label="Toggle Theme"
+        >
+          {isDarkMode ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+          )}
+        </button>
       </header>
 
       <main className="w-full max-w-4xl flex-1 flex flex-col items-center justify-center px-6 pb-20 z-10 relative">
@@ -163,7 +195,7 @@ const CustomEidCard = () => {
               <div className="space-y-6">
                 <span className="font-display text-7xl sm:text-9xl text-gold-glow block drop-shadow-[0_8px_32px_rgba(212,175,55,0.4)] mb-2 animate-pulse-glow">عید مبارک</span>
                 <ShimmerTitle className="text-4xl sm:text-6xl tracking-tight">Create Your Eid Card</ShimmerTitle>
-                <p className="text-white/70 text-lg sm:text-xl leading-relaxed font-light">
+                <p className="text-slate-600 dark:text-white/70 text-lg sm:text-xl leading-relaxed font-light">
                   Personalize a premium Eid greeting card crafted with golden accents and celestial vibes. 
                   Share the magic of this night with your loved ones.
                 </p>
@@ -190,59 +222,59 @@ const CustomEidCard = () => {
             >
               <GlassContainer className="space-y-12">
                 <div className="text-center space-y-3">
-                  <h2 className="text-sm font-display font-black uppercase tracking-[0.4em] text-white/50 italic">Step 01</h2>
+                  <h2 className="text-sm font-display font-black uppercase tracking-[0.4em] text-slate-400 dark:text-white/50 italic">Step 01</h2>
                   <ShimmerTitle className="text-2xl tracking-widest">YOUR IDENTITY</ShimmerTitle>
                 </div>
 
                 <div className="space-y-10">
                   <div className="space-y-4">
-                    <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 block ml-1">Your Name</label>
+                    <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-slate-400 dark:text-white/40 block ml-1">Your Name</label>
                     <input 
                       type="text"
                       placeholder="Umama"
                       value={yourName}
                       onChange={(e) => setYourName(e.target.value)}
-                      className="w-full bg-white/5 border-b-2 border-white/10 px-0 py-4 text-2xl font-bold text-white outline-none focus:border-gold-glow transition-all placeholder:text-white/10"
+                      className="w-full bg-black/5 dark:bg-white/5 border-b-2 border-slate-200 dark:border-white/10 px-0 py-4 text-2xl font-bold text-slate-800 dark:text-white outline-none focus:border-gold-glow transition-all placeholder:text-slate-300 dark:placeholder:text-white/10"
                     />
                   </div>
 
                   <div className="space-y-8 pt-4">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/10" />
+                      <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent" />
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-[#fde047] animate-pulse" />
-                        <span className="text-[10px] uppercase font-black tracking-[0.3em] text-white/30">Card Roles</span>
+                        <span className="text-[10px] uppercase font-black tracking-[0.3em] text-slate-400 dark:text-white/30">Card Roles</span>
                       </div>
-                      <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/10" />
+                      <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-slate-200 dark:via-white/10 to-transparent" />
                     </div>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <label className="text-[10px] uppercase tracking-widest font-bold text-white/40">From</label>
+                        <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-white/40">From</label>
                         <input 
                           type="text"
                           placeholder="Akif"
                           value={fromName}
                           onChange={(e) => setFromName(e.target.value)}
-                          className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl font-bold text-white outline-none focus:ring-1 focus:ring-gold-glow/30 transition-all text-center"
+                          className="w-full bg-black/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-5 py-4 rounded-2xl font-bold text-slate-800 dark:text-white outline-none focus:ring-1 focus:ring-gold-glow/30 transition-all text-center"
                         />
                       </div>
                       <div className="space-y-3">
-                        <label className="text-[10px] uppercase tracking-widest font-bold text-white/40">To</label>
+                        <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-white/40">To</label>
                         <input 
                           type="text"
                           placeholder="Sumu"
                           value={toName}
                           onChange={(e) => setToName(e.target.value)}
-                          className="w-full bg-white/5 border border-white/10 px-5 py-4 rounded-2xl font-bold text-white outline-none focus:ring-1 focus:ring-gold-glow/30 transition-all text-center"
+                          className="w-full bg-black/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-5 py-4 rounded-2xl font-bold text-slate-800 dark:text-white outline-none focus:ring-1 focus:ring-gold-glow/30 transition-all text-center"
                         />
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-6 pt-2">
-                    <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 text-center block italic">Recipient Gender</label>
-                    <div className="flex bg-white/5 p-2 rounded-3xl border border-white/5">
+                    <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-slate-400 dark:text-white/40 text-center block italic">Recipient Gender</label>
+                    <div className="flex bg-black/5 dark:bg-white/5 p-2 rounded-3xl border border-slate-200 dark:border-white/5">
                       {["Male", "Female", "Other"].map((g) => (
                         <button
                           key={g}
@@ -250,7 +282,7 @@ const CustomEidCard = () => {
                           className={`flex-1 py-4 rounded-2xl font-bold text-xs tracking-widest transition-all duration-500 overflow-hidden relative ${
                             gender === g 
                               ? "text-black shadow-[0_0_20px_rgba(253,224,71,0.2)]" 
-                              : "text-white/30 hover:text-white/60"
+                              : "text-slate-500 dark:text-white/30 hover:text-slate-900 dark:hover:text-white/60"
                           }`}
                         >
                           {gender === g && (
@@ -272,7 +304,7 @@ const CustomEidCard = () => {
                       if (!toName.trim()) return toast.error("Please enter Receiver's name");
                       setStep("template");
                     }}
-                    className="w-full group relative py-6 bg-white/10 hover:bg-white/15 text-white rounded-[30px] font-display font-bold text-lg tracking-[0.2em] transition-all flex items-center justify-center gap-4 border border-white/10 hover:border-white/20 shadow-xl overflow-hidden"
+                    className="w-full group relative py-6 bg-slate-900 dark:bg-white/10 hover:bg-black dark:hover:bg-white/15 text-white rounded-[30px] font-display font-bold text-lg tracking-[0.2em] transition-all flex items-center justify-center gap-4 border border-transparent dark:border-white/10 hover:border-white/20 shadow-xl overflow-hidden"
                   >
                     SELECT DESIGN <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -291,9 +323,9 @@ const CustomEidCard = () => {
               className="w-full space-y-12"
             >
               <div className="text-center space-y-4">
-                <h2 className="text-sm font-display font-medium uppercase tracking-[0.5em] text-white/40">Step 02</h2>
+                <h2 className="text-sm font-display font-medium uppercase tracking-[0.5em] text-slate-400 dark:text-white/40">Step 02</h2>
                 <ShimmerTitle className="text-3xl sm:text-4xl tracking-widest uppercase">CHOOSE YOUR VIBE</ShimmerTitle>
-                <p className="text-white/40 font-light text-sm italic tracking-wide">Crafting for <span className="text-gold-glow font-bold opacity-100">{toName}</span></p>
+                <p className="text-slate-400 dark:text-white/40 font-light text-sm italic tracking-wide">Crafting for <span className="text-gold-glow font-bold opacity-100">{toName}</span></p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
@@ -328,8 +360,8 @@ const CustomEidCard = () => {
                        </div>
                     </div>
                     <div className="text-center pb-2">
-                      <h3 className="font-display font-bold text-xs tracking-[0.3em] text-white/90 mb-2">{tpl.name}</h3>
-                      <p className="text-[9px] text-white/40 font-medium leading-relaxed tracking-widest uppercase">{tpl.desc}</p>
+                      <h3 className="font-display font-bold text-xs tracking-[0.3em] text-slate-800 dark:text-white/90 mb-2">{tpl.name}</h3>
+                      <p className="text-[9px] text-slate-400 dark:text-white/40 font-medium leading-relaxed tracking-widest uppercase">{tpl.desc}</p>
                     </div>
                   </button>
                 ))}
@@ -338,7 +370,7 @@ const CustomEidCard = () => {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-10 px-4">
                 <button
                   onClick={() => setStep("identity")}
-                  className="w-full sm:w-auto px-8 py-3 text-white/30 font-display font-bold text-sm tracking-widest hover:text-white transition-all flex items-center gap-3 uppercase"
+                  className="w-full sm:w-auto px-8 py-3 text-slate-400 dark:text-white/30 font-display font-bold text-sm tracking-widest hover:text-slate-800 dark:hover:text-white transition-all flex items-center gap-3 uppercase"
                 >
                   <ArrowLeft className="w-5 h-5" /> Back to identity
                 </button>
@@ -393,29 +425,29 @@ const CustomEidCard = () => {
                   <ShimmerTitle className="text-5xl sm:text-7xl leading-[1.05] tracking-tight">
                     The Magic <br /> is Yours.
                   </ShimmerTitle>
-                  <p className="text-white/60 text-lg sm:text-xl font-light leading-relaxed max-w-md mx-auto lg:mx-0">
+                  <p className="text-slate-600 dark:text-white/60 text-lg sm:text-xl font-light leading-relaxed max-w-md mx-auto lg:mx-0">
                     Your personalized Eid card is infused with moonlight and magic. 
-                    Share this radiant wish with <strong className="text-white/90">{toName}</strong>.
+                    Share this radiant wish with <strong className="text-slate-900 dark:text-white/90">{toName}</strong>.
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start pt-4">
+                <div className="flex flex-col gap-6 justify-center lg:justify-start pt-4 w-full max-w-md mx-auto lg:mx-0">
                   <button
                     onClick={handleDownload}
                     disabled={isExporting}
-                    className="group relative flex-1 lg:flex-none px-12 py-6 overflow-hidden rounded-[30px] transition-all duration-300 disabled:opacity-50 active:scale-95 shadow-2xl"
+                    className="group relative w-full px-12 py-6 overflow-hidden rounded-[30px] transition-all duration-300 disabled:opacity-50 active:scale-95 shadow-2xl"
                   >
-                    <div className="absolute inset-0 bg-white" />
-                    <span className="relative z-10 font-display font-black text-lg text-black tracking-widest flex items-center justify-center gap-3">
+                    <div className="absolute inset-0 bg-slate-900 dark:bg-white" />
+                    <span className="relative z-10 font-display font-black text-lg text-white dark:text-black tracking-widest flex items-center justify-center gap-3">
                       <Download className="w-6 h-6" /> {isExporting ? "PREPARING..." : "DOWNLOAD"}
                     </span>
                   </button>
                   <button
                      onClick={handleShare}
                      disabled={isExporting}
-                     className="group relative flex-1 lg:flex-none px-12 py-6 overflow-hidden rounded-[30px] transition-all duration-300 disabled:opacity-50 active:scale-95 bg-white/5 border border-white/20 hover:bg-white/10"
+                     className="group relative w-full px-12 py-6 overflow-hidden rounded-[30px] transition-all duration-300 disabled:opacity-50 active:scale-95 bg-black/10 dark:bg-white/5 border border-slate-300 dark:border-white/20 hover:bg-black/20 dark:hover:bg-white/10"
                   >
-                    <span className="relative z-10 font-display font-bold text-lg text-white tracking-widest flex items-center justify-center gap-3">
+                    <span className="relative z-10 font-display font-bold text-lg text-slate-800 dark:text-white tracking-widest flex items-center justify-center gap-3">
                       <Share2 className="w-6 h-6" /> SHARE
                     </span>
                   </button>
@@ -424,7 +456,7 @@ const CustomEidCard = () => {
                 <div className="pt-8">
                    <button 
                     onClick={() => setStep("template")}
-                    className="text-white/30 font-display font-bold text-xs hover:text-white flex items-center gap-3 mx-auto lg:mx-0 uppercase tracking-widest transition-colors"
+                    className="text-slate-400 dark:text-white/30 font-display font-bold text-xs hover:text-slate-800 dark:hover:text-white flex items-center gap-3 mx-auto lg:mx-0 uppercase tracking-widest transition-colors"
                    >
                      <Palette className="w-4 h-4 text-gold-glow" /> Change card design
                    </button>

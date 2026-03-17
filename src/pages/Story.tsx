@@ -101,6 +101,25 @@ const scenes = [
 
 const Story = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("theme");
+      return saved ? saved === "dark" : true;
+    }
+    return true;
+  });
+
+  // Apply theme class
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -110,7 +129,7 @@ const Story = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fdf2f8] via-[#f5f3ff] to-[#fae8ff] flex flex-col items-center justify-center relative overflow-hidden font-body">
+    <div className="min-h-screen bg-gradient-to-br from-[#fdf2f8] via-[#f5f3ff] to-[#fae8ff] dark:from-slate-950 dark:via-indigo-950 dark:to-slate-900 flex flex-col items-center justify-center relative overflow-hidden font-body transition-colors duration-700">
       {/* Dynamic Background decor dots */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-30">
         {[...Array(20)].map((_, i) => (
@@ -141,13 +160,31 @@ const Story = () => {
       <div className="absolute top-8 left-8 z-30">
         <Link 
           to="/" 
-          className="group flex items-center gap-2 text-[#831843] hover:text-[#4c0519] transition-all duration-300"
+          className="group flex items-center gap-2 text-pink-900 dark:text-pink-100/70 hover:text-pink-950 dark:hover:text-pink-50 transition-all duration-300"
         >
-          <div className="w-10 h-10 rounded-full bg-white/40 backdrop-blur-md flex items-center justify-center border border-pink-200 group-hover:bg-white/60 transition-all">
+          <div className="w-10 h-10 rounded-full bg-white/40 dark:bg-white/10 backdrop-blur-md flex items-center justify-center border border-pink-200 dark:border-pink-500/20 group-hover:bg-white/60 dark:group-hover:bg-white/20 transition-all">
             <ArrowLeft className="w-5 h-5" />
           </div>
           <span className="font-semibold tracking-wide">Back to Home</span>
         </Link>
+      </div>
+
+      {/* Theme Toggle */}
+      <div className="absolute top-8 right-8 z-30">
+        <button
+          onClick={toggleTheme}
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 shadow-lg border border-pink-200 dark:border-white/20 bg-white/40 dark:bg-white/10 backdrop-blur-md"
+          style={{
+            color: isDarkMode ? "#fde047" : "#9D174D",
+          }}
+          aria-label="Toggle Theme"
+        >
+          {isDarkMode ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+          )}
+        </button>
       </div>
 
       <main className="flex-1 w-full flex items-center justify-center relative z-10">
@@ -178,8 +215,8 @@ const Story = () => {
             <div 
               className={`h-2.5 rounded-full transition-all duration-700 ease-in-out ${
                 currentSlide === index 
-                  ? "w-10 bg-[#9D174D] shadow-[0_0_15px_rgba(157,23,77,0.4)]" 
-                  : "w-2.5 bg-[#9D174D]/20 group-hover:bg-[#9D174D]/40"
+                  ? "w-10 bg-pink-800 dark:bg-pink-400 shadow-[0_0_15px_rgba(157,23,77,0.4)]" 
+                  : "w-2.5 bg-pink-800/20 dark:bg-pink-400/20 group-hover:bg-pink-800/40 dark:group-hover:bg-pink-400/40"
               }`}
             />
           </button>

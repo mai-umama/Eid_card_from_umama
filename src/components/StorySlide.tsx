@@ -50,7 +50,7 @@ const StorySlide = ({ title, description, illustration, isActive }: StorySlidePr
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-display text-[#4c0519] mb-4 sm:mb-6 tracking-tight drop-shadow-sm"
+          className="text-4xl sm:text-5xl md:text-6xl font-display text-pink-950 dark:text-pink-100 mb-4 sm:mb-6 tracking-tight drop-shadow-sm"
         >
           {title}
         </motion.h2>
@@ -59,7 +59,7 @@ const StorySlide = ({ title, description, illustration, isActive }: StorySlidePr
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.6 }}
-          className="text-xl sm:text-2xl text-[#831843]/80 font-body leading-relaxed max-w-xl mx-auto drop-shadow-sm px-4"
+          className="text-xl sm:text-2xl text-pink-900/80 dark:text-pink-200/90 font-body leading-relaxed max-w-xl mx-auto drop-shadow-sm px-4"
         >
           {description}
         </motion.p>

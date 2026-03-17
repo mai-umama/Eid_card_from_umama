@@ -52,6 +52,7 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         gold: "hsl(var(--gold))",
+        "gold-glow": "hsl(var(--gold-glow))",
         emerald: "hsl(var(--emerald))",
         glass: "hsl(var(--glass))",
         sidebar: {

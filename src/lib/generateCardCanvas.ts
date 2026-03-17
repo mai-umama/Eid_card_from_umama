@@ -214,18 +214,24 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   if (opts.gender === "Female") drawGirl(ctx, W/2, H * 0.65, charScale);
   else drawBoy(ctx, W/2, H * 0.65, charScale);
 
-  ctx.fillStyle = accent; ctx.globalAlpha = 0.7;
-  ctx.font = `bold ${W * 0.02}px sans-serif`;
-  ctx.fillText("FROM", W/2, H - b - ch * 0.15);
+  ctx.fillStyle = accent; ctx.globalAlpha = 1.0; // Full opacity for the label
+  ctx.font = `bold ${W * 0.026}px sans-serif`;
+  ctx.fillText("FROM", W/2, H - b - ch * 0.155);
 
   const fromName = (opts.senderName || "UMAMA").toUpperCase();
-  ctx.font = `bold ${W * 0.045}px sans-serif`;
+  ctx.font = `bold ${W * 0.048}px sans-serif`;
   const tw = ctx.measureText(fromName).width;
-  ctx.fillStyle = "rgba(0,0,0,0.2)";
-  roundRect(ctx, W/2 - tw/2 - 30, H - b - ch * 0.11, tw + 60, 60, 30);
+  ctx.fillStyle = "rgba(0,0,0,0.7)"; // Much darker background for high contrast
+  roundRect(ctx, W/2 - tw/2 - 35, H - b - ch * 0.12, tw + 70, 70, 35);
   ctx.fill();
+  
+  // High contrast border
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
   ctx.fillStyle = "white"; ctx.globalAlpha = 1;
-  ctx.fillText(fromName, W/2, H - b - ch * 0.07);
+  ctx.fillText(fromName, W/2, H - b - ch * 0.065);
 
   return canvas;
 }

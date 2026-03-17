@@ -282,8 +282,8 @@ const EidCardPreview = ({
           </div>
 
           <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 w-full text-center z-20">
-             <div className="text-[10px] uppercase mb-1 opacity-70 tracking-[0.4em]" style={{ color: themeContext.accent }}>From</div>
-             <div className="inline-block px-8 py-2.5 sm:py-3 rounded-full border shadow-xl backdrop-blur-sm" style={{ backgroundColor: `${themeContext.accent}20`, borderColor: `${themeContext.accent}40` }}>
+             <div className="text-[10px] uppercase mb-1 font-black tracking-[0.4em] drop-shadow-md" style={{ color: themeContext.accent }}>From</div>
+             <div className="inline-block px-8 py-2.5 sm:py-3 rounded-full border shadow-2xl backdrop-blur-md" style={{ backgroundColor: `rgba(0,0,0,0.6)`, borderColor: `${themeContext.accent}` }}>
                 <h4 className="text-lg sm:text-xl font-bold font-display tracking-widest truncate max-w-[240px] sm:max-w-[300px] text-white">
                    {senderName || "UMAMA"}
                 </h4>
