@@ -3,14 +3,22 @@ import { motion } from "framer-motion";
 interface EidCardPreviewProps {
   senderName: string;
   receiverName: string;
-  gender: "Male" | "Female";
+  gender: "Male" | "Female" | "Other";
   characterType: "Standard" | "Lantern" | "Festive";
-  backgroundStyle: "Elegant gold lantern" | "Floral Eid theme" | "Mosque arch theme";
+  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory";
   id?: string;
   variant?: "full" | "icon";
 }
 
-const EidCardPreview = ({ senderName, receiverName, gender, characterType, backgroundStyle, id, variant = "full" }: EidCardPreviewProps) => {
+const EidCardPreview = ({ 
+  senderName, 
+  receiverName, 
+  gender, 
+  characterType, 
+  templateId = "royal-teal",
+  id, 
+  variant = "full" 
+}: EidCardPreviewProps) => {
   
   // ── Character Rendering Logic (High-Precision SVG Mode) ──────────────────
   const BoyChar = (
@@ -79,35 +87,24 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
     const isLantern = characterType === "Lantern";
     const isFestive = characterType === "Festive";
 
-    // Lantern SVG accessory (hanging lantern held by character)
     const LanternAccessory = (
       <svg viewBox="0 0 80 140" className="absolute bottom-[12%] right-[-10%] w-[22%] drop-shadow-lg" style={{ zIndex: 20 }}>
-        {/* String */}
         <line x1="40" y1="0" x2="40" y2="20" stroke="#B45309" strokeWidth="2" />
-        {/* Top cap */}
         <rect x="22" y="20" width="36" height="8" rx="4" fill="#D97706" />
-        {/* Lantern body */}
         <rect x="18" y="28" width="44" height="70" rx="10" fill="#FDE68A" stroke="#D97706" strokeWidth="2" />
-        {/* Glow inner */}
         <rect x="24" y="34" width="32" height="58" rx="7" fill="#FEF3C7" opacity="0.9" />
-        {/* Flame shape */}
         <ellipse cx="40" cy="63" rx="10" ry="16" fill="#FBBF24" opacity="0.8" />
         <ellipse cx="40" cy="57" rx="5" ry="8" fill="#F59E0B" opacity="0.9" />
-        {/* Bottom cap */}
         <rect x="22" y="98" width="36" height="8" rx="4" fill="#D97706" />
-        {/* Tassel */}
         <line x1="40" y1="106" x2="40" y2="130" stroke="#D97706" strokeWidth="2" />
         <circle cx="40" cy="132" r="5" fill="#B45309" />
-        {/* Diamond cutouts / pattern */}
         <rect x="33" y="48" width="8" height="8" rx="2" fill="#FDE68A" opacity="0.6" />
         <rect x="33" y="68" width="8" height="8" rx="2" fill="#FDE68A" opacity="0.6" />
       </svg>
     );
 
-    // Festive decorations: floating stars/flowers around the character
     const FestiveDecorations = (
       <>
-        {/* Colorful stars */}
         {[
           { cx: "12%", cy: "10%", color: "#FCD34D", size: "8%" },
           { cx: "80%", cy: "8%",  color: "#F9A8D4", size: "7%" },
@@ -126,7 +123,6 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
             <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill={s.color} />
           </motion.svg>
         ))}
-        {/* Flower top-center */}
         <motion.svg
           viewBox="0 0 40 40"
           style={{ position: "absolute", left: "44%", top: "2%", width: "12%", zIndex: 20 }}
@@ -142,7 +138,6 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
           ))}
           <circle cx="20" cy="20" r="6" fill="#FEF3C7" />
         </motion.svg>
-        {/* Sparkle glow ring */}
         <motion.div
           animate={{ scale: [1, 1.18, 1], opacity: [0.25, 0.55, 0.25] }}
           transition={{ duration: 3, repeat: Infinity }}
@@ -157,8 +152,6 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
 
     return (
       <div className="relative w-full h-full flex items-center justify-center isolate">
-
-        {/* Lantern: warm amber glow behind character */}
         {isLantern && (
           <motion.div
             animate={{ opacity: [0.35, 0.65, 0.35], scale: [1, 1.1, 1] }}
@@ -170,10 +163,7 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
             }}
           />
         )}
-
-        {/* Festive decorations behind/around character */}
         {isFestive && FestiveDecorations}
-
         <motion.div
           key={`${gender}-${characterType}`}
           initial={{ scale: 0.8, opacity: 0, y: 40 }}
@@ -182,23 +172,43 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
           className="h-full w-full flex items-center justify-center drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)] z-10 relative"
         >
           {isMale ? BoyChar : GirlChar}
-
-          {/* Lantern held by character */}
           {isLantern && LanternAccessory}
         </motion.div>
       </div>
     );
   };
 
-  // ── Theme Styling ────────────────────────────────────────────────────────
   const getThemeMap = () => {
-    const isMale = gender === "Male";
-    return {
-      outerBg: isMale ? "#93C5FD" : "#C4B5FD",
-      innerBg: isMale ? "#60A5FA" : "#A78BFA",
-      silhouette: isMale ? "#1E40AF" : "#6D28D9",
-    };
+    switch (templateId) {
+      case "majestic-midnight":
+        return {
+          outerBg: "#0f172a",
+          innerBg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)",
+          silhouette: "#020617",
+          accent: "#e2e8f0",
+          border: "border-slate-800",
+        };
+      case "eternal-ivory":
+        return {
+          outerBg: "#fef2f2",
+          innerBg: "linear-gradient(135deg, #fffcf2 0%, #fff7ed 100%)",
+          silhouette: "#fecaca",
+          accent: "#fb7185",
+          border: "border-rose-100",
+        };
+      case "royal-teal":
+      default:
+        return {
+          outerBg: "#042f2e",
+          innerBg: "linear-gradient(135deg, #134e4a 0%, #0d9488 100%)",
+          silhouette: "#042f2e",
+          accent: "#fcd34d",
+          border: "border-teal-900",
+        };
+    }
   };
+
+  const themeContext = getThemeMap();
 
   if (variant === "icon") {
     const isMale = gender === "Male";
@@ -211,84 +221,74 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
     );
   }
 
-  const theme = getThemeMap();
-
   return (
     <div 
       id={id}
-      className="relative w-full aspect-[4/5] shadow-2xl overflow-hidden p-4 sm:p-6 transition-all duration-700"
-      style={{ background: theme.outerBg, borderRadius: "12px" }}
+      className={`relative w-full aspect-[4/5] shadow-2xl overflow-hidden p-3 sm:p-5 transition-all duration-1000 ${themeContext.border}`}
+      style={{ background: themeContext.outerBg, borderRadius: "24px" }}
     >
       <div 
-        className="relative w-full h-full flex flex-col items-center p-6 sm:p-10 shadow-inner overflow-hidden border-2 border-white/10"
-        style={{ background: theme.innerBg, borderRadius: "8px" }}
+        className="relative w-full h-full flex flex-col items-center p-6 sm:p-10 shadow-inner overflow-hidden"
+        style={{ background: themeContext.innerBg, borderRadius: "16px" }}
       >
-        {/* Background Mosque Silhouette */}
-        <div className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none opacity-30 z-0">
+        <div className="absolute inset-2 border-[1.5px] rounded-lg opacity-40 z-20 pointer-events-none" style={{ borderColor: themeContext.accent }} />
+        <div className="absolute inset-4 border-[0.5px] rounded-md opacity-20 z-20 pointer-events-none" style={{ borderColor: themeContext.accent }} />
+        
+        <div className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none opacity-20 z-0">
            <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
-              <path d="M0 200V120L40 140L60 100V60H100V100L120 120V80H160V120L180 90H220L240 120V80H280V120L300 100V60H340V100L360 140L400 120V200H0Z" fill={theme.silhouette} />
-              <path d="M85 40L100 20L115 40V120H85V40ZM325 40L340 20L355 40V120H325V40Z" fill={theme.silhouette} />
+              <path d="M0 200V120L40 140L60 100V60H100V100L120 120V80H160V120L180 90H220L240 120V80H280V120L300 100V60H340V100L360 140L400 120V200H0Z" fill={themeContext.silhouette} />
+              <path d="M85 40L100 20L115 40V120H85V40ZM325 40L340 20L355 40V120H325V40Z" fill={themeContext.silhouette} />
            </svg>
         </div>
 
-        {/* Scattered Stars */}
-        <div className="absolute inset-x-0 top-0 h-1/2 z-0 pointer-events-none">
-           {[...Array(20)].map((_, i) => (
+        <div className="absolute inset-x-0 top-0 h-1/2 z-0 pointer-events-none opacity-40">
+           {[...Array(15)].map((_, i) => (
              <div 
                key={i}
-               className="absolute bg-white rounded-full opacity-60"
+               className="absolute rounded-full"
                style={{
                  width: Math.random() < 0.3 ? "6px" : "3px",
                  height: Math.random() < 0.3 ? "6px" : "3px",
+                 backgroundColor: themeContext.accent,
                  top: `${Math.random() * 80}%`,
                  left: `${Math.random() * 100}%`,
                  animation: `pulse ${2 + Math.random() * 3}s infinite`,
                }}
              />
            ))}
-           <svg viewBox="0 0 24 24" className="absolute top-[10%] left-[10%] w-10 h-10 text-white/20 fill-current">
-              <path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 10.158 10.158A9.005 9.005 0 0 1 12 21a9 9 0 0 1 0-18z" />
-           </svg>
         </div>
 
-        {/* Main Content */}
         <div className="relative z-10 w-full h-full block">
-          
-          {/* Top Section: Greetings & To */}
-          <div className="absolute top-4 left-0 right-0 w-full text-center select-none text-white drop-shadow-md pb-4 text-shadow-sm">
-            <h2 className="font-display text-xl sm:text-2xl font-bold opacity-90 uppercase m-0" style={{ letterSpacing: '0.1em' }}>
+          <div className="absolute top-4 left-0 right-0 w-full text-center select-none drop-shadow-md pb-4 text-shadow-sm">
+            <h2 className="font-display text-[10px] sm:text-xs font-bold opacity-80 uppercase m-0 tracking-[0.3em]" style={{ color: themeContext.accent }}>
               HAPPY EID AL-FITR
             </h2>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-5xl font-black uppercase mt-2 mb-0" style={{ letterSpacing: '0.12em', lineHeight: '1.2' }}>
+            <h1 className="font-display text-4xl sm:text-5xl font-black uppercase mt-2 mb-0 tracking-[0.1em]" style={{ color: "white" }}>
               MUBARAK
             </h1>
 
-            {/* To Section */}
-            <div className="w-full text-center mt-3">
-              <div className="text-[10px] sm:text-xs font-bold text-white/80 uppercase mb-1" style={{ letterSpacing: '0.2em' }}>To</div>
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white text-center drop-shadow-lg truncate mx-auto px-2 max-w-[90%]" style={{ lineHeight: '1.2' }}>
+            <div className="w-full text-center mt-6">
+              <div className="text-[10px] uppercase mb-1 opacity-70 tracking-[0.4em]" style={{ color: themeContext.accent }}>To</div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white text-center drop-shadow-lg truncate mx-auto px-2 max-w-[90%] font-display">
                 {receiverName || "DEAREST ONE"}
               </h3>
             </div>
           </div>
 
-          {/* Middle Section: Character */}
-          <div className="absolute top-[32%] bottom-[15%] left-0 right-0 w-full flex items-center justify-center">
+          <div className="absolute top-[35%] bottom-[15%] left-0 right-0 w-full flex items-center justify-center">
              <div className="h-full max-h-[100%] flex items-center justify-center">
-               <CharacterDisplay />
+                <CharacterDisplay />
              </div>
           </div>
 
-          {/* Bottom Section: From */}
           <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 w-full text-center z-20">
-             <div className="text-[10px] sm:text-xs font-bold text-white/80 uppercase mb-2" style={{ letterSpacing: '0.2em' }}>From</div>
-             <div className="inline-block bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-2.5 sm:py-3 rounded-full shadow-xl">
-                <h4 className="text-xl sm:text-2xl font-bold font-display tracking-wider truncate max-w-[240px] sm:max-w-[300px]" style={{ lineHeight: '1.2' }}>
+             <div className="text-[10px] uppercase mb-1 opacity-70 tracking-[0.4em]" style={{ color: themeContext.accent }}>From</div>
+             <div className="inline-block px-8 py-2.5 sm:py-3 rounded-full border shadow-xl backdrop-blur-sm" style={{ backgroundColor: `${themeContext.accent}20`, borderColor: `${themeContext.accent}40` }}>
+                <h4 className="text-lg sm:text-xl font-bold font-display tracking-widest truncate max-w-[240px] sm:max-w-[300px] text-white">
                    {senderName || "UMAMA"}
                 </h4>
              </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -296,4 +296,3 @@ const EidCardPreview = ({ senderName, receiverName, gender, characterType, backg
 };
 
 export default EidCardPreview;
-

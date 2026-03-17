@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import SkyBackground from "@/components/SkyBackground";
 import VelvetArchSection from "@/components/VelvetArchSection";
+import StarBurstEffect from "@/components/StarBurstEffect";
 import { Link } from "react-router-dom";
 import { Volume2, VolumeX, BookOpen, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -115,6 +116,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center relative bg-background overflow-x-hidden">
+      <StarBurstEffect />
       <audio ref={audioRef} src="/eid_mubarak.mp3" loop className="hidden" />
       <SkyBackground />
 
