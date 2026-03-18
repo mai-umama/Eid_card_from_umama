@@ -195,12 +195,12 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
 
   ctx.textAlign = "center";
   ctx.fillStyle = accent;
-  ctx.font = `bold ${W * 0.02}px sans-serif`;
-  ctx.fillText("HAPPY EID AL-FITR", W/2, b + ch * 0.08);
+  ctx.font = `bold ${W * 0.035}px sans-serif`;
+  ctx.fillText("EID UL-FITR", W/2, b + ch * 0.08);
 
   ctx.fillStyle = "white";
-  ctx.font = `black ${W * 0.09}px serif`;
-  ctx.fillText("MUBARAK", W/2, b + ch * 0.18);
+  ctx.font = `black ${W * 0.12}px serif`;
+  ctx.fillText("MUBARAK", W/2, b + ch * 0.19);
 
   ctx.fillStyle = accent; ctx.globalAlpha = 0.7;
   ctx.font = `bold ${W * 0.02}px sans-serif`;

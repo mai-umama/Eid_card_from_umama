@@ -228,7 +228,7 @@ const EidCardPreview = ({
       style={{ background: themeContext.outerBg, borderRadius: "24px" }}
     >
       <div 
-        className="relative w-full h-full flex flex-col items-center p-6 sm:p-10 shadow-inner overflow-hidden"
+        className="relative w-full h-full flex flex-col items-center p-4 sm:p-6 shadow-inner overflow-hidden"
         style={{ background: themeContext.innerBg, borderRadius: "16px" }}
       >
         <div className="absolute inset-2 border-[1.5px] rounded-lg opacity-40 z-20 pointer-events-none" style={{ borderColor: themeContext.accent }} />
@@ -260,10 +260,10 @@ const EidCardPreview = ({
 
         <div className="relative z-10 w-full h-full block">
           <div className="absolute top-4 left-0 right-0 w-full text-center select-none drop-shadow-md pb-4 text-shadow-sm">
-            <h2 className="font-display text-[10px] sm:text-xs font-bold opacity-80 uppercase m-0 tracking-[0.3em]" style={{ color: themeContext.accent }}>
-              HAPPY EID AL-FITR
+            <h2 className="font-display text-sm sm:text-base font-bold opacity-80 uppercase m-0 tracking-[0.3em]" style={{ color: themeContext.accent }}>
+              EID UL-FITR
             </h2>
-            <h1 className="font-display text-4xl sm:text-5xl font-black uppercase mt-2 mb-0 tracking-[0.1em]" style={{ color: "white" }}>
+            <h1 className="font-display text-4xl sm:text-5xl font-black uppercase mt-1 mb-0 tracking-tighter" style={{ color: "white" }}>
               MUBARAK
             </h1>
 
