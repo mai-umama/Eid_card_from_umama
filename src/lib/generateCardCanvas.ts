@@ -14,12 +14,22 @@ type CardOptions = {
   height?: number;
 };
 
-/** Load & cache fonts so canvas can use them. */
 async function ensureFonts() {
   if (typeof window === "undefined") return;
   // Using standard system fonts or assuming fonts are loaded via CSS
   await document.fonts.load("900 48px 'Inter'");
   await document.fonts.load("700 24px 'Inter'");
+}
+
+/** Helper to load an image */
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = (e) => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
 }
 
 /** Draw a rounded rectangle path */
@@ -163,42 +173,150 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   const ctx = canvas.getContext("2d")!;
 
   // Theme values matching EidCardPreview
-  let outerBg, innerBg, silhouette, accent;
+  let outerBg, innerBg, silhouette, accent, bgImage;
   switch (opts.templateId) {
     case "majestic-midnight":
-      outerBg = "#0f172a"; innerBg = "#1e1b4b"; silhouette = "#020617"; accent = "#e2e8f0"; break;
+      outerBg = "#0f172a";
+      bgImage = "/backgrounds/majestic-midnight.png";
+      innerBg = "rgba(15, 23, 42, 0.8)";
+      silhouette = "transparent";
+      accent = "#e2e8f0";
+      break;
     case "eternal-ivory":
-      outerBg = "#fef2f2"; innerBg = "#fffcf2"; silhouette = "#fecaca"; accent = "#fb7185"; break;
+      outerBg = "#fef3c7"; 
+      innerBg = "#fff7ed"; 
+      silhouette = "transparent"; 
+      accent = "#b45309"; 
+      break;
     case "royal-teal":
     default:
-      outerBg = "#042f2e"; innerBg = "#134e4a"; silhouette = "#042f2e"; accent = "#fcd34d"; break;
+      outerBg = "#042f2e";
+      bgImage = "/backgrounds/royal-teal.png";
+      innerBg = "rgba(19, 78, 74, 0.8)";
+      silhouette = "transparent";
+      accent = "#fcd34d";
+      break;
   }
 
   // Draw background
-  ctx.fillStyle = outerBg;
-  roundRect(ctx, 0, 0, W, H, 24);
-  ctx.fill();
+  if (bgImage) {
+    try {
+      const img = await loadImage(bgImage);
+      ctx.drawImage(img, 0, 0, W, H);
+    } catch (e) {
+      console.error(e);
+      ctx.fillStyle = outerBg;
+      roundRect(ctx, 0, 0, W, H, 24);
+      ctx.fill();
+    }
+  } else {
+    ctx.fillStyle = outerBg;
+    roundRect(ctx, 0, 0, W, H, 24);
+    ctx.fill();
+  }
 
   const b = 20;
   const cw = W - b*2, ch = H - b*2;
-  ctx.fillStyle = innerBg;
-  roundRect(ctx, b, b, cw, ch, 16);
-  ctx.fill();
+  
+  if (!bgImage) {
+    if (opts.templateId === "eternal-ivory") {
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, "#fff7ed");
+      grad.addColorStop(1, "#fef3c7");
+      ctx.fillStyle = grad;
+      roundRect(ctx, b, b, cw, ch, 16);
+      ctx.fill();
+
+      // --- Mandala Pattern ---
+      ctx.save();
+      ctx.globalAlpha = 0.05;
+      ctx.strokeStyle = "#78350f";
+      for (let i = 0; i < 12; i++) {
+        ctx.beginPath(); ctx.arc(0, 0, 50 + i * 40, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(W, H, 60 + i * 50, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.restore();
+
+      // --- Mosque Silhouette ---
+      ctx.save();
+      ctx.globalAlpha = 0.15;
+      const mGrd = ctx.createLinearGradient(0, H*0.1, 0, H*0.5);
+      mGrd.addColorStop(0, "#92400e");
+      mGrd.addColorStop(1, "transparent");
+      ctx.fillStyle = mGrd;
+      
+      // Main Dome
+      ctx.beginPath(); ctx.arc(W/2, H*0.35, W*0.15, Math.PI, 0); ctx.lineTo(W/2 + W*0.15, H*0.5); ctx.lineTo(W/2 - W*0.15, H*0.5); ctx.closePath(); ctx.fill();
+      // Side Domes
+      ctx.fillStyle = "rgba(120, 53, 15, 0.4)";
+      ctx.beginPath(); ctx.arc(W*0.25, H*0.4, W*0.08, Math.PI, 0); ctx.lineTo(W*0.33, H*0.5); ctx.lineTo(W*0.17, H*0.5); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.arc(W*0.75, H*0.4, W*0.08, Math.PI, 0); ctx.lineTo(W*0.83, H*0.5); ctx.lineTo(W*0.67, H*0.5); ctx.closePath(); ctx.fill();
+      // Minarets
+      ctx.fillRect(W*0.12, H*0.2, 15, H*0.3); ctx.fillRect(W*0.88, H*0.2, 15, H*0.3);
+      ctx.restore();
+
+      // --- Ornate Lanterns ---
+      ctx.save();
+      ctx.strokeStyle = "#78350f";
+      ctx.lineWidth = 1.5;
+      const drawOrnateLant = (lx: number, ly: number, s: number) => {
+        ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, ly); ctx.stroke();
+        ctx.fillStyle = "#92400e"; ctx.fillRect(lx - 15*s, ly, 30*s, 10*s);
+        ctx.fillStyle = "#78350f"; ctx.fillRect(lx - 25*s, ly + 10*s, 50*s, 60*s);
+        ctx.fillStyle = "#fde047"; ctx.fillRect(lx - 15*s, ly + 25*s, 30*s, 35*s);
+      };
+      drawOrnateLant(W*0.08, H*0.18, 1.5);
+      drawOrnateLant(W*0.22, H*0.1, 1.2);
+      drawOrnateLant(W*0.85, H*0.14, 1.0);
+      ctx.restore();
+
+      // --- Ornamental Border ---
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(b+10, b+10, cw-20, ch-20);
+      // Corners
+      ctx.fillStyle = "white";
+      ctx.fillRect(b+5, b+5, 10, 10); ctx.fillRect(W-b-15, b+5, 10, 10);
+      ctx.fillRect(b+5, H-b-15, 10, 10); ctx.fillRect(W-b-15, H-b-15, 10, 10);
+      ctx.restore();
+
+      // Add small sparkles
+      for (let i = 0; i < 40; i++) {
+        const sx = b + Math.random() * cw;
+        const sy = b + Math.random() * ch;
+        ctx.fillStyle = "rgba(186, 230, 253, 0.8)";
+        ctx.globalAlpha = 0.2 + Math.random() * 0.6;
+        ctx.beginPath(); ctx.arc(sx, sy, 1 + Math.random() * 2, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    } else {
+      ctx.fillStyle = innerBg;
+      roundRect(ctx, b, b, cw, ch, 16);
+      ctx.fill();
+    }
+  }
 
   // Decorative border
   ctx.strokeStyle = accent; ctx.globalAlpha = 0.4; ctx.lineWidth = 3;
   roundRect(ctx, b + 10, b + 10, cw - 20, ch - 20, 12); ctx.stroke();
   ctx.globalAlpha = 1;
 
-  drawStars(ctx, b, b, cw, ch * 0.5, accent);
-  drawMosque(ctx, silhouette, b, b, cw, ch);
-
+  if (opts.templateId !== "royal-teal" && opts.templateId !== "majestic-midnight" && opts.templateId !== "eternal-ivory") {
+    drawStars(ctx, b, b, cw, ch * 0.5, accent);
+    drawMosque(ctx, silhouette, b, b, cw, ch);
+  }
+  // Text Drawing
   ctx.textAlign = "center";
-  ctx.fillStyle = accent;
-  ctx.font = `bold ${W * 0.035}px sans-serif`;
+  const isEternalIvory = opts.templateId === "eternal-ivory";
+  const isRoyalTeal = opts.templateId === "royal-teal";
+  ctx.fillStyle = (isEternalIvory || isRoyalTeal) ? "#5d2e0a" : accent;
+  ctx.font = (isEternalIvory || isRoyalTeal) 
+    ? `bold ${W * 0.035}px 'Bodoni 72', 'Bodoni MT', Bodoni, serif`
+    : `bold ${W * 0.035}px sans-serif`;
   ctx.fillText("EID UL-FITR", W/2, b + ch * 0.08);
 
-  ctx.fillStyle = "white";
+  ctx.fillStyle = isEternalIvory ? "#3f1b02" : (opts.templateId === "royal-teal" || opts.templateId === "majestic-midnight" ? "white" : "#9D174D");
   ctx.font = `black ${W * 0.12}px serif`;
   ctx.fillText("MUBARAK", W/2, b + ch * 0.19);
 
@@ -221,8 +339,12 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   const fromName = (opts.senderName || "UMAMA").toUpperCase();
   ctx.font = `bold ${W * 0.048}px sans-serif`;
   const tw = ctx.measureText(fromName).width;
-  ctx.fillStyle = "rgba(0,0,0,0.7)"; // Much darker background for high contrast
-  roundRect(ctx, W/2 - tw/2 - 35, H - b - ch * 0.12, tw + 70, 70, 35);
+  const fromBgColor = opts.templateId === "eternal-ivory" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
+  const fromY = H - b - ch * 0.1;
+  const fromH = 60;
+  ctx.fillStyle = fromBgColor;
+  const padding = 40;
+  roundRect(ctx, W/2 - tw/2 - padding, fromY - fromH/2, tw + padding*2, fromH, fromH/2);
   ctx.fill();
   
   // High contrast border
@@ -230,8 +352,11 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  ctx.fillStyle = "white"; ctx.globalAlpha = 1;
-  ctx.fillText(fromName, W/2, H - b - ch * 0.065);
+  ctx.fillStyle = opts.templateId === "eternal-ivory" ? "#0f172a" : "white"; 
+  ctx.globalAlpha = 1;
+  ctx.textBaseline = "middle";
+  ctx.fillText(fromName, W/2, fromY);
+  ctx.textBaseline = "alphabetic"; // Reset
 
   return canvas;
 }

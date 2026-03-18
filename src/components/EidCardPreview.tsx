@@ -178,30 +178,181 @@ const EidCardPreview = ({
     );
   };
 
+  const MandalaDecor = () => (
+    <div className="absolute inset-x-0 bottom-0 top-0 pointer-events-none opacity-[0.07] z-0 overflow-hidden">
+      <svg viewBox="0 0 800 1000" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" strokeWidth="1">
+          <circle cx="0" cy="0" r="300" />
+          <circle cx="800" cy="1000" r="400" />
+          <path d="M0 0 L 800 1000 M 800 0 L 0 1000" opacity="0.2" />
+          {/* Simple Mandala shapes */}
+          {[...Array(12)].map((_, i) => (
+            <circle key={i} cx="0" cy="0" r={50 + i * 40} />
+          ))}
+          {[...Array(15)].map((_, i) => (
+            <circle key={`r-${i}`} cx="800" cy="1000" r={60 + i * 50} />
+          ))}
+        </g>
+      </svg>
+    </div>
+  );
+
+  const OrnamentalBorder = () => (
+    <div className="absolute inset-2 border border-white/60 rounded-xl pointer-events-none z-30">
+       <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white/80 rounded-tl-lg" />
+       <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-white/80 rounded-tr-lg" />
+       <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-white/80 rounded-bl-lg" />
+       <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white/80 rounded-br-lg" />
+       {/* Diamond accents */}
+       <div className="absolute top-[-5px] left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45" />
+       <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45" />
+    </div>
+  );
+
+  const LanternsDecor = () => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+      <svg viewBox="0 0 400 500" className="absolute top-0 left-[-20px] w-[220px] h-auto drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="60" y1="0" x2="60" y2="180" stroke="#78350f" strokeWidth="1.5" />
+        <line x1="150" y1="0" x2="150" y2="100" stroke="#78350f" strokeWidth="1.5" />
+        <line x1="240" y1="0" x2="240" y2="280" stroke="#78350f" strokeWidth="1.5" />
+        
+        {/* Lantern 1 */}
+        <g transform="translate(40, 180) scale(0.45)">
+           <path d="M20 0H60V15H20V0Z" fill="#92400e"/>
+           <path d="M5 15H75V110L40 145L5 110V15Z" fill="#78350f" stroke="#b45309" strokeWidth="2"/>
+           <rect x="20" y="35" width="40" height="60" rx="8" fill="#fde047" />
+           <circle cx="40" cy="65" r="15" fill="#fff" opacity="0.6" />
+        </g>
+        
+        {/* Lantern 2 */}
+        <g transform="translate(130, 100) scale(0.4)">
+           <path d="M20 0H60V15H20V0Z" fill="#92400e"/>
+           <path d="M5 15H75V110L40 145L5 110V15Z" fill="#78350f" stroke="#b45309" strokeWidth="2"/>
+           <rect x="20" y="35" width="40" height="60" rx="8" fill="#fde047" />
+           <circle cx="40" cy="65" r="15" fill="#fff" opacity="0.6" />
+        </g>
+
+        {/* Lantern 3 */}
+        <g transform="translate(220, 280) scale(0.5)">
+           <path d="M20 0H60V15H20V0Z" fill="#92400e"/>
+           <path d="M5 15H75V110L40 145L5 110V15Z" fill="#78350f" stroke="#b45309" strokeWidth="2"/>
+           <rect x="20" y="35" width="40" height="60" rx="8" fill="#fde047" />
+           <circle cx="40" cy="65" r="15" fill="#fff" opacity="0.6" />
+        </g>
+      </svg>
+      {/* Right Lantern */}
+      <svg viewBox="0 0 200 400" className="absolute top-0 right-[-10px] w-[120px] h-auto opacity-70" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <line x1="100" y1="0" x2="100" y2="150" stroke="#78350f" strokeWidth="1.2" />
+         <g transform="translate(80, 150) scale(0.35)">
+           <path d="M10 10H70V100L40 130L10 100V10Z" fill="#78350f" stroke="#b45309" strokeWidth="2"/>
+           <rect x="25" y="30" width="30" height="50" rx="5" fill="#fde047" />
+         </g>
+      </svg>
+    </div>
+  );
+
+  const MosqueSilhouetteDecor = () => (
+    <div className="absolute top-[8%] inset-x-0 h-[60%] pointer-events-none z-0 flex items-start justify-center overflow-hidden">
+       <svg width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMin slice">
+          {/* Main Mosque Silhouette */}
+          <g opacity="0.15" style={{ filter: 'blur(1px)' }}>
+            <path d="M300 500V350C300 280 500 280 500 350V500H300Z" fill="url(#mosqueGrd)" />
+            <path d="M150 500V380C150 330 280 330 280 380V500H150Z" fill="#78350f" />
+            <path d="M520 500V380C520 330 650 330 650 380V500H520Z" fill="#78350f" />
+            
+            <rect x="100" y="200" width="25" height="300" fill="#78350f" />
+            <path d="M90 200 L 112.5 170 L 135 200 Z" fill="#78350f" />
+            <rect x="675" y="200" width="25" height="300" fill="#78350f" />
+            <path d="M665 200 L 687.5 170 L 710 200 Z" fill="#78350f" />
+          </g>
+
+          <defs>
+            <linearGradient id="mosqueGrd" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#92400e" />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+          </defs>
+       </svg>
+    </div>
+  );
+
+  const BokehEffect = () => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: `${Math.random() * 100 + 50}px`,
+            height: `${Math.random() * 100 + 50}px`,
+            background: i % 2 === 0 ? "radial-gradient(circle, rgba(251,113,133,0.15) 0%, transparent 70%)" : "radial-gradient(circle, rgba(186, 230, 253, 0.3) 0%, transparent 70%)",
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            filter: "blur(20px)",
+          }}
+          animate={{
+            scale: [1, 1.2, 0.9, 1],
+            opacity: [0.3, 0.6, 0.3],
+            x: [0, Math.random() * 40 - 20, 0],
+            y: [0, Math.random() * 40 - 20, 0],
+          }}
+          transition={{
+            duration: 5 + Math.random() * 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={`sparkle-${i}`}
+          className="absolute rounded-full bg-sky-200 shadow-[0_0_10px_rgba(186,230,253,0.8)]"
+          style={{
+            width: "2px",
+            height: "2px",
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0.5, 1.5, 0.5],
+          }}
+          transition={{
+            duration: 2 + Math.random() * 3,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+          }}
+        />
+      ))}
+    </div>
+  );
+
   const getThemeMap = () => {
     switch (templateId) {
       case "majestic-midnight":
         return {
           outerBg: "#0f172a",
-          innerBg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)",
-          silhouette: "#020617",
+          bgImage: "url(/backgrounds/majestic-midnight.png)",
+          innerBg: "linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(49, 46, 129, 0.4) 100%)",
+          silhouette: "transparent",
           accent: "#e2e8f0",
           border: "border-slate-800",
         };
       case "eternal-ivory":
         return {
-          outerBg: "#fef2f2",
-          innerBg: "linear-gradient(135deg, #fffcf2 0%, #fff7ed 100%)",
-          silhouette: "#fecaca",
-          accent: "#fb7185",
-          border: "border-rose-100",
+          outerBg: "#fef3c7",
+          innerBg: "linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%)",
+          silhouette: "transparent",
+          accent: "#b45309",
+          border: "border-amber-100",
         };
       case "royal-teal":
       default:
         return {
           outerBg: "#042f2e",
-          innerBg: "linear-gradient(135deg, #134e4a 0%, #0d9488 100%)",
-          silhouette: "#042f2e",
+          bgImage: "url(/backgrounds/royal-teal.png)",
+          innerBg: "linear-gradient(135deg, rgba(19, 78, 74, 0.8) 0%, rgba(13, 148, 136, 0.4) 100%)",
+          silhouette: "transparent",
           accent: "#fcd34d",
           border: "border-teal-900",
         };
@@ -225,45 +376,78 @@ const EidCardPreview = ({
     <div 
       id={id}
       className={`relative w-full aspect-[4/5] shadow-2xl overflow-hidden p-3 sm:p-5 transition-all duration-1000 ${themeContext.border}`}
-      style={{ background: themeContext.outerBg, borderRadius: "24px" }}
+      style={{ 
+        backgroundColor: themeContext.outerBg, 
+        backgroundImage: (themeContext as any).bgImage || "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        borderRadius: "24px" 
+      }}
     >
       <div 
         className="relative w-full h-full flex flex-col items-center p-4 sm:p-6 shadow-inner overflow-hidden"
-        style={{ background: themeContext.innerBg, borderRadius: "16px" }}
+        style={{ 
+          background: (themeContext as any).bgImage ? "transparent" : themeContext.innerBg, 
+          backgroundBlendMode: "overlay",
+          borderRadius: "16px" 
+        }}
       >
+        {templateId === "eternal-ivory" && (
+          <>
+            <MandalaDecor />
+            <MosqueSilhouetteDecor />
+            <LanternsDecor />
+            <OrnamentalBorder />
+            <BokehEffect />
+          </>
+        )}
         <div className="absolute inset-2 border-[1.5px] rounded-lg opacity-40 z-20 pointer-events-none" style={{ borderColor: themeContext.accent }} />
         <div className="absolute inset-4 border-[0.5px] rounded-md opacity-20 z-20 pointer-events-none" style={{ borderColor: themeContext.accent }} />
         
-        <div className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none opacity-20 z-0">
-           <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
-              <path d="M0 200V120L40 140L60 100V60H100V100L120 120V80H160V120L180 90H220L240 120V80H280V120L300 100V60H340V100L360 140L400 120V200H0Z" fill={themeContext.silhouette} />
-              <path d="M85 40L100 20L115 40V120H85V40ZM325 40L340 20L355 40V120H325V40Z" fill={themeContext.silhouette} />
-           </svg>
-        </div>
+        {(templateId !== "royal-teal" && templateId !== "majestic-midnight" && templateId !== "eternal-ivory") && (
+          <div className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none opacity-20 z-0">
+             <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none">
+                <path d="M0 200V120L40 140L60 100V60H100V100L120 120V80H160V120L180 90H220L240 120V80H280V120L300 100V60H340V100L360 140L400 120V200H0Z" fill={themeContext.silhouette} />
+                <path d="M85 40L100 20L115 40V120H85V40ZM325 40L340 20L355 40V120H325V40Z" fill={themeContext.silhouette} />
+             </svg>
+          </div>
+        )}
 
-        <div className="absolute inset-x-0 top-0 h-1/2 z-0 pointer-events-none opacity-40">
-           {[...Array(15)].map((_, i) => (
-             <div 
-               key={i}
-               className="absolute rounded-full"
-               style={{
-                 width: Math.random() < 0.3 ? "6px" : "3px",
-                 height: Math.random() < 0.3 ? "6px" : "3px",
-                 backgroundColor: themeContext.accent,
-                 top: `${Math.random() * 80}%`,
-                 left: `${Math.random() * 100}%`,
-                 animation: `pulse ${2 + Math.random() * 3}s infinite`,
-               }}
-             />
-           ))}
-        </div>
+        {(templateId !== "royal-teal" && templateId !== "majestic-midnight" && templateId !== "eternal-ivory") && (
+          <div className="absolute inset-x-0 top-0 h-1/2 z-0 pointer-events-none opacity-40">
+             {[...Array(15)].map((_, i) => (
+               <div 
+                 key={i}
+                 className="absolute rounded-full"
+                 style={{
+                   width: Math.random() < 0.3 ? "6px" : "3px",
+                   height: Math.random() < 0.3 ? "6px" : "3px",
+                   backgroundColor: themeContext.accent,
+                   top: `${Math.random() * 80}%`,
+                   left: `${Math.random() * 100}%`,
+                   animation: `pulse ${2 + Math.random() * 3}s infinite`,
+                 }}
+               />
+             ))}
+          </div>
+        )}
 
         <div className="relative z-10 w-full h-full block">
           <div className="absolute top-4 left-0 right-0 w-full text-center select-none drop-shadow-md pb-4 text-shadow-sm">
-            <h2 className="font-display text-sm sm:text-base font-bold opacity-80 uppercase m-0 tracking-[0.3em]" style={{ color: themeContext.accent }}>
+            <h2 
+              className="font-medium text-xs sm:text-sm tracking-[0.2em] mb-1 opacity-100"
+              style={{ 
+                color: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "#5d2e0a" : themeContext.accent,
+                fontFamily: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "'Bodoni 72', 'Bodoni MT', Bodoni, serif" : "inherit",
+                fontWeight: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "bold" : "medium"
+              }}
+            >
               EID UL-FITR
             </h2>
-            <h1 className="font-display text-4xl sm:text-5xl font-black uppercase mt-1 mb-0 tracking-tighter" style={{ color: "white" }}>
+            <h1 
+              className="font-display text-4xl sm:text-5xl font-black uppercase mt-1 mb-0 tracking-tighter" 
+              style={{ color: templateId === "eternal-ivory" ? "#5d2e0a" : "#9D174D" }}
+            >
               MUBARAK
             </h1>
 
@@ -283,11 +467,15 @@ const EidCardPreview = ({
 
           <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 w-full text-center z-20">
              <div className="text-[10px] uppercase mb-1 font-black tracking-[0.4em] drop-shadow-md" style={{ color: themeContext.accent }}>From</div>
-             <div className="inline-block px-8 py-2.5 sm:py-3 rounded-full border shadow-2xl backdrop-blur-md" style={{ backgroundColor: `rgba(0,0,0,0.6)`, borderColor: `${themeContext.accent}` }}>
-                <h4 className="text-lg sm:text-xl font-bold font-display tracking-widest truncate max-w-[240px] sm:max-w-[300px] text-white">
+              <div className="inline-block px-8 py-2.5 sm:py-3 rounded-full border shadow-2xl backdrop-blur-md" 
+                style={{ 
+                  backgroundColor: templateId === "eternal-ivory" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)", 
+                  borderColor: `${themeContext.accent}` 
+                }}>
+                <h4 className={`text-lg sm:text-xl font-bold font-display tracking-widest truncate max-w-[240px] sm:max-w-[300px] ${templateId === "eternal-ivory" ? "text-slate-900" : "text-white"}`}>
                    {senderName || "UMAMA"}
                 </h4>
-             </div>
+              </div>
           </div>
         </div>
       </div>

@@ -60,21 +60,21 @@ const CustomEidCard = () => {
       id: "royal-teal", 
       name: "ROYAL TEAL", 
       desc: "Deep teal with radiant gold", 
-      preview: "bg-[#134e4a]",
+      preview: "bg-royal-teal-preview",
       accent: "#fcd34d"
     },
     { 
       id: "majestic-midnight", 
       name: "MAJESTIC MIDNIGHT", 
       desc: "Indigo blues with silver alabaster", 
-      preview: "bg-[#1e1b4b]",
+      preview: "bg-majestic-midnight-preview",
       accent: "#e2e8f0"
     },
     { 
       id: "eternal-ivory", 
       name: "ETERNAL IVORY", 
       desc: "Warm cream with rose gold", 
-      preview: "bg-[#fffcf2]",
+      preview: "bg-eternal-ivory-preview",
       accent: "#fb7185"
     }
   ] as const;
