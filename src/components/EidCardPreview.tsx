@@ -269,7 +269,7 @@ const EidCardPreview = ({
 
             <div className="w-full text-center mt-6">
               <div className="text-[10px] uppercase mb-1 opacity-70 tracking-[0.4em]" style={{ color: themeContext.accent }}>To</div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white text-center drop-shadow-lg truncate mx-auto px-2 max-w-[90%] font-display">
+              <h3 className={`text-2xl sm:text-3xl font-black text-center drop-shadow-lg truncate mx-auto px-2 max-w-[90%] font-display ${templateId === "eternal-ivory" ? "text-black" : "text-white"}`}>
                 {receiverName || "DEAREST ONE"}
               </h3>
             </div>

@@ -206,7 +206,7 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   ctx.font = `bold ${W * 0.02}px sans-serif`;
   ctx.fillText("TO", W/2, b + ch * 0.25);
 
-  ctx.fillStyle = "white"; ctx.globalAlpha = 1;
+  ctx.fillStyle = opts.templateId === "eternal-ivory" ? "black" : "white"; ctx.globalAlpha = 1;
   ctx.font = `bold ${W * 0.07}px sans-serif`;
   ctx.fillText(opts.receiverName.toUpperCase() || "DEAREST ONE", W/2, b + ch * 0.33);
 
