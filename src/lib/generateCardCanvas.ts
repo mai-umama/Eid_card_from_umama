@@ -9,7 +9,8 @@ type CardOptions = {
   senderName: string;
   receiverName: string;
   gender: "Male" | "Female" | "Other";
-  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory";
+  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory" | "velvet-arch";
+  quote?: string;
   width?: number;
   height?: number;
 };
@@ -19,6 +20,9 @@ async function ensureFonts() {
   // Using standard system fonts or assuming fonts are loaded via CSS
   await document.fonts.load("900 48px 'Inter'");
   await document.fonts.load("700 24px 'Inter'");
+  await document.fonts.load("700 24px 'Cinzel'");
+  await document.fonts.load("400 24px 'Poppins'");
+  await document.fonts.load("300 24px 'Poppins'");
 }
 
 /** Helper to load an image */
@@ -188,6 +192,13 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
       silhouette = "transparent"; 
       accent = "#b45309"; 
       break;
+    case "velvet-arch":
+      outerBg = "#1a0b0b";
+      bgImage = "/velvet_arch.jpg";
+      innerBg = "transparent";
+      silhouette = "transparent";
+      accent = "#bf953f";
+      break;
     case "royal-teal":
     default:
       outerBg = "#042f2e";
@@ -302,9 +313,79 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   roundRect(ctx, b + 10, b + 10, cw - 20, ch - 20, 12); ctx.stroke();
   ctx.globalAlpha = 1;
 
-  if (opts.templateId !== "royal-teal" && opts.templateId !== "majestic-midnight" && opts.templateId !== "eternal-ivory") {
+  if (opts.templateId !== "royal-teal" && opts.templateId !== "majestic-midnight" && opts.templateId !== "eternal-ivory" && opts.templateId !== "velvet-arch") {
     drawStars(ctx, b, b, cw, ch * 0.5, accent);
     drawMosque(ctx, silhouette, b, b, cw, ch);
+  }
+
+  if (opts.templateId === "velvet-arch") {
+    ctx.textAlign = "center";
+    
+    // Title
+    const titleGrd = ctx.createLinearGradient(W/2 - 200, 0, W/2 + 200, 0);
+    titleGrd.addColorStop(0, "#bf953f");
+    titleGrd.addColorStop(0.3, "#fcf6ba");
+    titleGrd.addColorStop(0.5, "#bf953f");
+    titleGrd.addColorStop(0.7, "#fde047");
+    titleGrd.addColorStop(1, "#bf953f");
+    
+    ctx.fillStyle = titleGrd;
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = "rgba(0,0,0,0.5)";
+    ctx.font = `bold ${W * 0.055}px 'Cinzel'`;
+    const titleText = opts.senderName ? `Eid Mubarak, ${opts.senderName}` : "Eid Mubarak";
+    ctx.fillText(titleText, W/2, H * 0.43);
+    
+    // Static wish
+    ctx.fillStyle = "#fefce8";
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = "rgba(0,0,0,0.8)";
+    ctx.font = `500 ${W * 0.028}px serif`;
+    const wishText = "May this beautiful day bring peace, happiness, and infinite blessings to you and your family.";
+    
+    // Wrap text helper for wish
+    const wrapText = (text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
+      const words = text.split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          ctx.fillText(line.trim(), x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), x, y);
+      return y;
+    };
+    
+    const lastY = wrapText(wishText, W/2, H * 0.52, W * 0.7, W * 0.045);
+    
+    // Divider
+    ctx.shadowBlur = 0;
+    const divGrd = ctx.createLinearGradient(W/2 - 40, 0, W/2 + 40, 0);
+    divGrd.addColorStop(0, "transparent");
+    divGrd.addColorStop(0.5, "#fde047");
+    divGrd.addColorStop(1, "transparent");
+    ctx.fillStyle = divGrd;
+    ctx.globalAlpha = 0.7;
+    ctx.fillRect(W/2 - 40, lastY + 30, 80, 2);
+    ctx.globalAlpha = 1;
+    
+    // Quote
+    if (opts.quote) {
+      ctx.fillStyle = "#fef08a";
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = "rgba(0,0,0,0.8)";
+      ctx.font = `italic 300 ${W * 0.024}px 'Poppins'`;
+      wrapText(opts.quote, W/2, lastY + 80, W * 0.6, W * 0.04);
+    }
+    
+    return canvas;
   }
   // Text Drawing
   ctx.textAlign = "center";

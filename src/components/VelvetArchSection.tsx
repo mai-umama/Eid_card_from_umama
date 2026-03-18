@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { Download, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { generateCardCanvas } from "@/lib/generateCardCanvas";
 
 // ── Easy to edit: add more quotes here ──────────────────────────────────────
 const EID_QUOTES = [
@@ -19,6 +22,7 @@ export const VelvetArchSection = ({ userName }: { userName?: string }) => {
   const [visibleQuote, setVisibleQuote] = useState("");
   const [showCursor, setShowCursor]     = useState(false);
   const [typed, setTyped]               = useState(false); // never restarts
+  const [isExporting, setIsExporting]   = useState(false);
   const sectionRef  = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -57,6 +61,31 @@ export const VelvetArchSection = ({ userName }: { userName?: string }) => {
     observer.observe(section);
     return () => observer.disconnect();
   }, [typed]);
+  
+  const handleDownload = async () => {
+    setIsExporting(true);
+    try {
+      const canvas = await generateCardCanvas({ 
+        senderName: userName || "UMAMA", 
+        receiverName: userName || "DEAREST", 
+        gender: "Other", // Doesn't matter for velvet-arch
+        templateId: "velvet-arch",
+        quote: quoteRef.current,
+        width: 1200, 
+        height: 1800 
+      });
+      const link = document.createElement("a");
+      link.download = `eid-card-${userName || "friend"}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast.success("Card downloaded successfully!");
+    } catch (error) {
+      console.error("Export failed", error);
+      toast.error("Failed to download card.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <section
@@ -140,6 +169,19 @@ export const VelvetArchSection = ({ userName }: { userName?: string }) => {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Download Button */}
+        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 z-30">
+          <button
+            onClick={handleDownload}
+            disabled={isExporting}
+            className="flex items-center gap-2 px-8 py-3.5 rounded-full font-display text-sm tracking-[0.2em] transition-all duration-300 hover:scale-110 active:scale-95 bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#bf953f] text-black font-bold shadow-[0_4px_20px_rgba(0,0,0,0.3)] border border-[#fcf6ba]/30 disabled:opacity-50 group overflow-hidden relative"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12" />
+            {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            <span className="relative z-10">{isExporting ? "PREPARING..." : "DOWNLOAD CARD"}</span>
+          </button>
         </div>
       </div>
 
