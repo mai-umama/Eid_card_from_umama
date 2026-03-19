@@ -5,9 +5,11 @@ interface EidCardPreviewProps {
   receiverName: string;
   gender: "Male" | "Female" | "Other";
   characterType: "Standard" | "Lantern" | "Festive";
-  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory";
+  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory" | "photo-vibe";
   id?: string;
   variant?: "full" | "icon";
+  customImage?: string | null;
+  customMessage?: string;
 }
 
 const EidCardPreview = ({ 
@@ -17,7 +19,9 @@ const EidCardPreview = ({
   characterType, 
   templateId = "royal-teal",
   id, 
-  variant = "full" 
+  variant = "full",
+  customImage,
+  customMessage
 }: EidCardPreviewProps) => {
   
   // ── Character Rendering Logic (High-Precision SVG Mode) ──────────────────
@@ -346,6 +350,15 @@ const EidCardPreview = ({
           accent: "#b45309",
           border: "border-amber-100",
         };
+      case "photo-vibe":
+        return {
+          outerBg: "#1e293b",
+          bgImage: customImage ? `url(${customImage})` : undefined,
+          innerBg: "rgba(0,0,0,0.5)", // Dark overlay for text readability
+          silhouette: "transparent",
+          accent: "#ffffff",
+          border: "border-slate-700",
+        };
       case "royal-teal":
       default:
         return {
@@ -432,47 +445,63 @@ const EidCardPreview = ({
           </div>
         )}
 
-        <div className="relative z-10 w-full h-full block">
-          <div className="absolute top-4 left-0 right-0 w-full text-center select-none drop-shadow-md pb-4 text-shadow-sm">
-            <h2 
-              className="font-medium text-xs sm:text-sm tracking-[0.2em] mb-1 opacity-100"
-              style={{ 
-                color: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "#5d2e0a" : themeContext.accent,
-                fontFamily: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "'Bodoni 72', 'Bodoni MT', Bodoni, serif" : "inherit",
-                fontWeight: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "bold" : "medium"
-              }}
-            >
-              EID UL-FITR
-            </h2>
-            <h1 
-              className="font-display text-4xl sm:text-5xl font-black uppercase mt-1 mb-0 tracking-tighter" 
-              style={{ color: templateId === "eternal-ivory" ? "#5d2e0a" : "#9D174D" }}
-            >
-              MUBARAK
-            </h1>
+        <div className="relative z-10 w-full h-full flex flex-col justify-between">
+          
+          <div className="w-full text-center select-none pt-4 pb-2 text-shadow-sm">
+            {templateId !== "photo-vibe" && (
+              <>
+                <h2 
+                  className="font-medium text-xs sm:text-sm tracking-[0.2em] mb-1 opacity-100"
+                  style={{ 
+                    color: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "#5d2e0a" : themeContext.accent,
+                    fontFamily: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "'Bodoni 72', 'Bodoni MT', Bodoni, serif" : "inherit",
+                    fontWeight: (templateId === "eternal-ivory" || templateId === "royal-teal") ? "bold" : "medium"
+                  }}
+                >
+                  EID UL-FITR
+                </h2>
+                <h1 
+                  className="font-display text-4xl sm:text-5xl font-black uppercase mt-1 mb-0 tracking-tighter" 
+                  style={{ color: templateId === "eternal-ivory" ? "#5d2e0a" : "#9D174D" }}
+                >
+                  MUBARAK
+                </h1>
+              </>
+            )}
 
-            <div className="w-full text-center mt-6">
-              <div className="text-[10px] uppercase mb-1 opacity-70 tracking-[0.4em]" style={{ color: themeContext.accent }}>To</div>
-              <h3 className={`text-2xl sm:text-3xl font-black text-center drop-shadow-lg truncate mx-auto px-2 max-w-[90%] font-display ${templateId === "eternal-ivory" ? "text-black" : "text-white"}`}>
+            <div className={`w-full text-center ${templateId === "photo-vibe" ? "mt-2" : "mt-6"}`}>
+              <div className="text-[10px] uppercase mb-1 opacity-90 font-bold tracking-[0.4em] drop-shadow-md" style={{ color: themeContext.accent }}>To</div>
+              <h3 className={`text-2xl sm:text-3xl font-black text-center drop-shadow-lg truncate mx-auto px-2 max-w-[90%] font-display ${templateId === "eternal-ivory" ? "text-black" : "text-white"} ${templateId === "photo-vibe" ? "shadow-black/50" : ""}`}
+                  style={templateId === "photo-vibe" ? { textShadow: "0 2px 10px rgba(0,0,0,0.8)" } : {}}>
                 {receiverName || "DEAREST ONE"}
               </h3>
             </div>
           </div>
 
-          <div className="absolute top-[35%] bottom-[15%] left-0 right-0 w-full flex items-center justify-center">
-             <div className="h-full max-h-[100%] flex items-center justify-center">
-                <CharacterDisplay />
+          {templateId === "photo-vibe" ? (
+             <div className="flex-1 w-full flex items-center justify-center px-6">
+                <p className="text-white text-center font-medium text-lg sm:text-xl leading-relaxed whitespace-pre-wrap drop-shadow-lg italic"
+                   style={{ textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}>
+                   {customMessage || "Wishing you a joyous Eid filled with blessings, love, and light."}
+                </p>
              </div>
-          </div>
+          ) : (
+            <div className="absolute top-[35%] bottom-[15%] left-0 right-0 w-full flex items-center justify-center">
+               <div className="h-full max-h-[100%] flex items-center justify-center">
+                  <CharacterDisplay />
+               </div>
+            </div>
+          )}
 
-          <div className="absolute bottom-2 sm:bottom-4 left-0 right-0 w-full text-center z-20">
+          <div className={`w-full text-center z-20 pb-4 ${templateId !== "photo-vibe" ? "mt-auto" : ""}`}>
              <div className="text-[10px] uppercase mb-1 font-black tracking-[0.4em] drop-shadow-md" style={{ color: themeContext.accent }}>From</div>
               <div className="inline-block px-8 py-2.5 sm:py-3 rounded-full border shadow-2xl backdrop-blur-md" 
                 style={{ 
-                  backgroundColor: templateId === "eternal-ivory" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)", 
+                  backgroundColor: templateId === "eternal-ivory" ? "rgba(255,255,255,0.7)" : (templateId === "photo-vibe" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.6)"), 
                   borderColor: `${themeContext.accent}` 
                 }}>
-                <h4 className={`text-lg sm:text-xl font-bold font-display tracking-widest truncate max-w-[240px] sm:max-w-[300px] ${templateId === "eternal-ivory" ? "text-slate-900" : "text-white"}`}>
+                <h4 className={`text-lg sm:text-xl font-bold font-display tracking-widest truncate max-w-[240px] sm:max-w-[300px] ${templateId === "eternal-ivory" ? "text-slate-900" : "text-white"}`}
+                    style={templateId === "photo-vibe" ? { textShadow: "0 2px 8px rgba(0,0,0,0.8)" } : {}}>
                    {senderName || "UMAMA"}
                 </h4>
               </div>

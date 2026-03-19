@@ -35,8 +35,12 @@ const CustomEidCard = () => {
   const [fromName, setFromName] = useState("");
   const [toName, setToName] = useState("");
   const [gender, setGender] = useState<"Male" | "Female" | "Other">("Male");
-  const [templateId, setTemplateId] = useState<"royal-teal" | "majestic-midnight" | "eternal-ivory">("royal-teal");
+  const [templateId, setTemplateId] = useState<"royal-teal" | "majestic-midnight" | "eternal-ivory" | "photo-vibe">("royal-teal");
   const [isExporting, setIsExporting] = useState(false);
+  
+  // Custom states for Photo Vibe
+  const [customImage, setCustomImage] = useState<string | null>(null);
+  const [customMessage, setCustomMessage] = useState<string>("");
 
   // Apply theme class
   useEffect(() => {
@@ -76,8 +80,26 @@ const CustomEidCard = () => {
       desc: "Warm cream with rose gold", 
       preview: "bg-eternal-ivory-preview",
       accent: "#fb7185"
+    },
+    {
+      id: "photo-vibe",
+      name: "PHOTO VIBE",
+      desc: "Your own personalized memory",
+      preview: "bg-slate-800", // Will be overridden or used as fallback
+      accent: "#ffffff"
     }
   ] as const;
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCustomImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleDownload = async () => {
     setIsExporting(true);
@@ -87,6 +109,8 @@ const CustomEidCard = () => {
         receiverName: toName, 
         gender: gender,
         templateId: templateId,
+        customImage: templateId === "photo-vibe" ? customImage : undefined,
+        customMessage: templateId === "photo-vibe" ? customMessage : undefined,
         width: 800, 
         height: 1000 
       });
@@ -112,6 +136,8 @@ const CustomEidCard = () => {
           receiverName: toName, 
           gender: gender,
           templateId: templateId,
+          customImage: templateId === "photo-vibe" ? customImage : undefined,
+          customMessage: templateId === "photo-vibe" ? customMessage : undefined,
           width: 800, 
           height: 1000 
         });
@@ -367,6 +393,47 @@ const CustomEidCard = () => {
                 ))}
               </div>
 
+              {templateId === "photo-vibe" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="max-w-xl mx-auto space-y-8 bg-black/5 dark:bg-white/5 p-8 rounded-3xl border border-slate-200 dark:border-white/10"
+                >
+                  <div className="space-y-4">
+                    <label className="text-xs uppercase tracking-[0.3em] font-bold text-slate-500 dark:text-white/50 block">1. Upload Background Photo</label>
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 dark:border-white/20 rounded-2xl cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 hover:border-gold-glow/50 transition-all overflow-hidden relative">
+                      {customImage ? (
+                        <div className="absolute inset-0 w-full h-full">
+                           <img src={customImage} alt="Uploaded background" className="w-full h-full object-cover opacity-80" />
+                           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                             <span className="text-white font-bold text-sm tracking-widest">CHANGE PHOTO</span>
+                           </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Palette className="w-8 h-8 mb-3 text-slate-400 dark:text-white/40" />
+                          <p className="mb-2 text-sm text-slate-500 dark:text-white/50 font-medium">Click to upload photo</p>
+                          <p className="text-xs text-slate-400 dark:text-white/30">PNG, JPG (Vertical highly recommended)</p>
+                        </div>
+                      )}
+                      <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                    </label>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-xs uppercase tracking-[0.3em] font-bold text-slate-500 dark:text-white/50 block">2. Custom Message (Optional)</label>
+                    <textarea 
+                      placeholder="Wishing you a joyous Eid filled with blessings... (1-2 lines max)"
+                      value={customMessage}
+                      onChange={(e) => setCustomMessage(e.target.value)}
+                      maxLength={100}
+                      rows={2}
+                      className="w-full bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 px-5 py-4 rounded-2xl font-medium text-slate-800 dark:text-white outline-none focus:ring-1 focus:ring-gold-glow/30 transition-all resize-none shadow-inner"
+                    />
+                  </div>
+                </motion.div>
+              )}
+
               <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-10 px-4">
                 <button
                   onClick={() => setStep("identity")}
@@ -409,6 +476,8 @@ const CustomEidCard = () => {
                     gender={gender}
                     characterType="Standard"
                     templateId={templateId}
+                    customImage={templateId === "photo-vibe" ? customImage : undefined}
+                    customMessage={templateId === "photo-vibe" ? customMessage : undefined}
                   />
                   {/* Subtle glass reflection overlay */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none" />

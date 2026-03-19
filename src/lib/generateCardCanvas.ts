@@ -9,10 +9,12 @@ type CardOptions = {
   senderName: string;
   receiverName: string;
   gender: "Male" | "Female" | "Other";
-  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory" | "velvet-arch";
+  templateId?: "royal-teal" | "majestic-midnight" | "eternal-ivory" | "velvet-arch" | "photo-vibe";
   quote?: string;
   width?: number;
   height?: number;
+  customImage?: string | null;
+  customMessage?: string;
 };
 
 async function ensureFonts() {
@@ -179,6 +181,13 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   // Theme values matching EidCardPreview
   let outerBg, innerBg, silhouette, accent, bgImage;
   switch (opts.templateId) {
+    case "photo-vibe":
+      outerBg = "#1e293b";
+      bgImage = opts.customImage || undefined;
+      innerBg = "rgba(0,0,0,0.5)";
+      silhouette = "transparent";
+      accent = "#ffffff";
+      break;
     case "majestic-midnight":
       outerBg = "#0f172a";
       bgImage = "/backgrounds/majestic-midnight.png";
@@ -213,7 +222,18 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   if (bgImage) {
     try {
       const img = await loadImage(bgImage);
-      ctx.drawImage(img, 0, 0, W, H);
+      // For photo-vibe, we want to cover the canvas completely and maintain aspect ratio if possible,
+      // but simple drawImage will stretch. Let's use drawing cover logic similar to background-size: cover
+      if (opts.templateId === "photo-vibe") {
+         const hRatio = canvas.width / img.width;
+         const vRatio = canvas.height / img.height;
+         const ratio = Math.max(hRatio, vRatio);
+         const centerShift_x = (canvas.width - img.width * ratio) / 2;
+         const centerShift_y = (canvas.height - img.height * ratio) / 2;  
+         ctx.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+      } else {
+         ctx.drawImage(img, 0, 0, W, H);
+      }
     } catch (e) {
       console.error(e);
       ctx.fillStyle = outerBg;
@@ -306,6 +326,11 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
       roundRect(ctx, b, b, cw, ch, 16);
       ctx.fill();
     }
+  } else if (opts.templateId === "photo-vibe") {
+      // Draw dark overlay for photo-vibe when there is a custom image
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      roundRect(ctx, b, b, cw, ch, 16);
+      ctx.fill();
   }
 
   // Decorative border
@@ -313,7 +338,7 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   roundRect(ctx, b + 10, b + 10, cw - 20, ch - 20, 12); ctx.stroke();
   ctx.globalAlpha = 1;
 
-  if (opts.templateId !== "royal-teal" && opts.templateId !== "majestic-midnight" && opts.templateId !== "eternal-ivory" && opts.templateId !== "velvet-arch") {
+  if (opts.templateId !== "royal-teal" && opts.templateId !== "majestic-midnight" && opts.templateId !== "eternal-ivory" && opts.templateId !== "velvet-arch" && opts.templateId !== "photo-vibe") {
     drawStars(ctx, b, b, cw, ch * 0.5, accent);
     drawMosque(ctx, silhouette, b, b, cw, ch);
   }
@@ -387,31 +412,66 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
     
     return canvas;
   }
+  // Wrap text helper
+  const wrapText = (text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
+    const words = text.split(' ');
+    let line = '';
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        ctx.fillText(line.trim(), x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line.trim(), x, y);
+    return y;
+  };
+
   // Text Drawing
   ctx.textAlign = "center";
   const isEternalIvory = opts.templateId === "eternal-ivory";
   const isRoyalTeal = opts.templateId === "royal-teal";
-  ctx.fillStyle = (isEternalIvory || isRoyalTeal) ? "#5d2e0a" : accent;
-  ctx.font = (isEternalIvory || isRoyalTeal) 
-    ? `bold ${W * 0.035}px 'Bodoni 72', 'Bodoni MT', Bodoni, serif`
-    : `bold ${W * 0.035}px sans-serif`;
-  ctx.fillText("EID UL-FITR", W/2, b + ch * 0.08);
+  const isPhotoVibe = opts.templateId === "photo-vibe";
 
-  ctx.fillStyle = isEternalIvory ? "#3f1b02" : (opts.templateId === "royal-teal" || opts.templateId === "majestic-midnight" ? "white" : "#9D174D");
-  ctx.font = `black ${W * 0.12}px serif`;
-  ctx.fillText("MUBARAK", W/2, b + ch * 0.19);
+  if (isPhotoVibe) {
+     ctx.shadowBlur = 8;
+     ctx.shadowColor = "rgba(0,0,0,0.8)";
+  }
 
-  ctx.fillStyle = accent; ctx.globalAlpha = 0.7;
+  if (!isPhotoVibe) {
+    ctx.fillStyle = (isEternalIvory || isRoyalTeal) ? "#5d2e0a" : accent;
+    ctx.font = (isEternalIvory || isRoyalTeal) 
+      ? `bold ${W * 0.035}px 'Bodoni 72', 'Bodoni MT', Bodoni, serif`
+      : `bold ${W * 0.035}px sans-serif`;
+    ctx.fillText("EID UL-FITR", W/2, b + ch * 0.08);
+
+    ctx.fillStyle = isEternalIvory ? "#3f1b02" : (opts.templateId === "royal-teal" || opts.templateId === "majestic-midnight" ? "white" : "#9D174D");
+    ctx.font = `black ${W * 0.12}px serif`;
+    ctx.fillText("MUBARAK", W/2, b + ch * 0.19);
+  }
+
+  ctx.fillStyle = accent; ctx.globalAlpha = isPhotoVibe ? 0.9 : 0.7;
   ctx.font = `bold ${W * 0.02}px sans-serif`;
-  ctx.fillText("TO", W/2, b + ch * 0.25);
+  ctx.fillText("TO", W/2, b + ch * (isPhotoVibe ? 0.08 : 0.25));
 
   ctx.fillStyle = opts.templateId === "eternal-ivory" ? "black" : "white"; ctx.globalAlpha = 1;
   ctx.font = `bold ${W * 0.07}px sans-serif`;
-  ctx.fillText(opts.receiverName.toUpperCase() || "DEAREST ONE", W/2, b + ch * 0.33);
+  ctx.fillText(opts.receiverName.toUpperCase() || "DEAREST ONE", W/2, b + ch * (isPhotoVibe ? 0.16 : 0.33));
 
-  const charScale = W / 700;
-  if (opts.gender === "Female") drawGirl(ctx, W/2, H * 0.65, charScale);
-  else drawBoy(ctx, W/2, H * 0.65, charScale);
+  if (isPhotoVibe) {
+      ctx.fillStyle = "white";
+      ctx.font = `italic 500 ${W * 0.038}px serif`;
+      wrapText(opts.customMessage || "Wishing you a joyous Eid filled with blessings, love, and light.", W/2, H * 0.45, W * 0.8, W * 0.05);
+  } else {
+      const charScale = W / 700;
+      if (opts.gender === "Female") drawGirl(ctx, W/2, H * 0.65, charScale);
+      else drawBoy(ctx, W/2, H * 0.65, charScale);
+  }
 
   ctx.fillStyle = accent; ctx.globalAlpha = 1.0; // Full opacity for the label
   ctx.font = `bold ${W * 0.026}px sans-serif`;
@@ -420,11 +480,14 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   const fromName = (opts.senderName || "UMAMA").toUpperCase();
   ctx.font = `bold ${W * 0.048}px sans-serif`;
   const tw = ctx.measureText(fromName).width;
-  const fromBgColor = opts.templateId === "eternal-ivory" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
+  const fromBgColor = opts.templateId === "eternal-ivory" ? "rgba(255,255,255,0.7)" : (isPhotoVibe ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.6)");
   const fromY = H - b - ch * 0.1;
   const fromH = 60;
   ctx.fillStyle = fromBgColor;
   const padding = 40;
+  
+  // Disable shadow for rendering the background of 'from' badge
+  ctx.shadowBlur = 0;
   roundRect(ctx, W/2 - tw/2 - padding, fromY - fromH/2, tw + padding*2, fromH, fromH/2);
   ctx.fill();
   
@@ -433,11 +496,16 @@ export async function generateCardCanvas(opts: CardOptions): Promise<HTMLCanvasE
   ctx.lineWidth = 2;
   ctx.stroke();
 
+  if (isPhotoVibe) {
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = "rgba(0,0,0,0.8)";
+  }
   ctx.fillStyle = opts.templateId === "eternal-ivory" ? "#0f172a" : "white"; 
   ctx.globalAlpha = 1;
   ctx.textBaseline = "middle";
   ctx.fillText(fromName, W/2, fromY);
   ctx.textBaseline = "alphabetic"; // Reset
+  ctx.shadowBlur = 0; // Final reset
 
   return canvas;
 }
